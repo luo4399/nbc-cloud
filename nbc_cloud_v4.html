@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NBC CLOUD</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1558a0;--blue-dk:#0e3d7a;--blue-xdk:#0d2b4e;
+  --blue-lt:#e8f2fb;--blue-md:#bee3f8;
+  --sidebar:#0d2440;--sidebar-hover:#162f55;--sidebar-active:#1558a0;
+  --bg:#f0f4f8;--card:#fff;--border:#ccd9ea;
+  --text:#1a2537;--text-2:#3d556e;--text-3:#8099b3;
+  --green:#15803d;--green-bg:#dcfce7;
+  --red:#b91c1c;--red-bg:#fee2e2;
+  --amber:#92400e;--amber-bg:#fef3c7;
+  --t1:#15803d;--t1-bg:#dcfce7;--t1-bd:#86efac;
+  --t2:#1d4ed8;--t2-bg:#dbeafe;--t2-bd:#93c5fd;
+  --t3:#be185d;--t3-bg:#fce7f3;--t3-bd:#f9a8d4;
+  --r:10px;--rs:6px;
+}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh}
+
+/* NAV */
+.pub-nav{background:var(--blue-xdk);height:52px;display:flex;align-items:center;padding:0 2rem;gap:1.5rem;position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0}
+.logo-icon{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:6px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:16px;height:16px;fill:#fff}
+.logo-text{font-size:13px;font-weight:700;letter-spacing:2px;color:#fff}
+.nav-links{display:flex;flex:1;gap:0;justify-content:flex-end}
+.nl{padding:0 12px;height:52px;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.7);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.nl:hover,.nl.active{color:#fff;border-bottom-color:rgba(255,255,255,.5)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.btn-login{padding:6px 14px;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:var(--rs);font-size:12px;cursor:pointer;transition:all .15s}
+.btn-login:hover{background:rgba(255,255,255,.2)}
+.lang-pill{font-size:11px;color:rgba(255,255,255,.5);padding:3px 8px;border:1px solid rgba(255,255,255,.15);border-radius:var(--rs);cursor:pointer}
+
+/* LAYOUT */
+.app-shell{display:flex;min-height:calc(100vh - 52px)}
+.sidebar{width:220px;background:var(--sidebar);flex-shrink:0;display:flex;flex-direction:column;position:sticky;top:52px;height:calc(100vh - 52px);overflow-y:auto;order:1}
+.content-area{flex:1;min-width:0;order:2}
+.sb-brand{padding:1.25rem 1rem .75rem;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo-row{display:flex;align-items:center;gap:8px}
+.sb-icon{width:24px;height:24px;background:var(--blue);border-radius:5px;display:flex;align-items:center;justify-content:center}
+.sb-icon svg{width:13px;height:13px;fill:#fff}
+.sb-brand-text{font-size:11px;font-weight:700;letter-spacing:2px;color:#fff}
+.sb-sub{font-size:9px;color:rgba(255,255,255,.3);margin-top:1px}
+.sb-section{padding:.4rem 0}
+.sb-label{font-size:10px;color:rgba(255,255,255,.25);padding:6px 1rem 3px;letter-spacing:1px;font-weight:600}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 1rem;cursor:pointer;color:rgba(255,255,255,.6);font-size:13px;transition:all .15s;border-left:3px solid transparent}
+.sb-item:hover{background:var(--sidebar-hover);color:#fff}
+.sb-item.active{background:rgba(21,88,160,.25);color:#fff;border-left-color:var(--blue)}
+.sb-item svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+.sb-divider{height:1px;background:rgba(255,255,255,.07);margin:.4rem 0}
+.sb-user{padding:.75rem 1rem;display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto}
+.sb-avatar{width:26px;height:26px;background:var(--blue);border-radius:50%;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-uname{font-size:12px;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-urole{font-size:9px;color:rgba(255,255,255,.35)}
+
+/* PAGES */
+.page{max-width:96%;margin:0 auto;padding:1.75rem 2rem}
+.page-doc{display:grid;grid-template-columns:220px 1fr;gap:2rem;max-width:96%;margin:0 auto;padding:1.75rem 2rem}
+.ph{margin-bottom:1.25rem}
+.ph h1{font-size:20px;font-weight:600;margin-bottom:4px}
+.ph p{font-size:13px;color:var(--text-2)}
+.bc{font-size:12px;color:var(--text-3);margin-bottom:.6rem;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.bc span{color:var(--blue);cursor:pointer}.bc span:hover{text-decoration:underline}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.sec-title{font-size:14px;font-weight:600;margin-bottom:1rem}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 16px;border-radius:var(--rs);font-size:13px;cursor:pointer;border:1px solid transparent;transition:all .15s;font-weight:500;text-decoration:none}
+.btn-p{background:var(--blue);color:#fff;border-color:var(--blue)}.btn-p:hover{background:var(--blue-dk)}
+.btn-o{background:#fff;color:var(--blue);border-color:var(--blue)}.btn-o:hover{background:var(--blue-lt)}
+.btn-g{background:transparent;color:var(--text-2);border-color:var(--border)}.btn-g:hover{background:var(--bg)}
+.btn-sm{padding:4px 10px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px}
+.btn-danger{background:var(--red-bg);color:var(--red);border-color:#fca5a5}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.b-run{background:#dbeafe;color:#1d4ed8}
+.b-done{background:var(--green-bg);color:var(--green)}
+.b-fail{background:var(--red-bg);color:var(--red)}
+.b-q{background:var(--amber-bg);color:var(--amber)}
+.b-ok{background:var(--green-bg);color:var(--green)}
+.b-pend{background:#f1f5f9;color:#475569}
+.b-t1{background:var(--t1-bg);color:var(--t1);font-weight:700}
+.b-t2{background:var(--t2-bg);color:var(--t2);font-weight:700}
+.b-t3{background:var(--t3-bg);color:var(--t3);font-weight:700}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.d-run{background:#3b82f6;animation:pulse 1.4s infinite}
+.d-done{background:#16a34a}
+.d-fail{background:#ef4444}
+.d-q{background:#f59e0b}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:12px;font-weight:500;color:var(--text-2);padding:9px 14px;text-align:left;background:#f8fafc;border-bottom:1px solid var(--border)}
+.tbl td{font-size:13px;padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f8fbfd}
+.tw{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.tn{font-weight:500}.tsub{font-size:11px;color:var(--text-3);font-family:monospace;margin-top:1px}
+
+/* FORM */
+.fg{margin-bottom:1rem}
+.fl{font-size:12px;font-weight:500;color:var(--text-2);display:block;margin-bottom:5px}
+.req{color:#ef4444;margin-left:2px}
+.fi,.fs,.ft{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--rs);font-size:13px;color:var(--text);background:#fff;transition:border .15s;font-family:inherit}
+.fi:focus,.fs:focus,.ft:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 2px rgba(21,88,160,.1)}
+.ft{min-height:80px;resize:vertical}
+.fhint{font-size:11px;color:var(--text-3);margin-top:4px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.char-c{font-size:11px;color:var(--text-3);text-align:right;margin-top:2px}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:1.5rem 1rem;overflow-y:auto}
+.modal{background:#fff;border-radius:var(--r);width:100%;max-width:640px;margin:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-wide{max-width:780px}
+.mhd{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;border-radius:var(--r) var(--r) 0 0;z-index:1}
+.mhd h3{font-size:15px;font-weight:600}
+.mx{cursor:pointer;font-size:18px;color:var(--text-3);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:4px;margin-top:-2px}
+.mx:hover{background:var(--bg)}
+.mbody{padding:1.5rem;max-height:68vh;overflow-y:auto}
+.mft{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+
+/* STAT */
+.stat-kv{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+.stat-kv:last-child{border-bottom:none}
+.stat-kv .k{color:var(--text-2)}.stat-kv .v{font-weight:500}
+.sbar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-top:4px}
+.sfill{height:100%;border-radius:3px;background:var(--blue)}
+.sfill-g{background:#16a34a}
+
+/* FILTER PILLS */
+.fps{display:flex;gap:6px;flex-wrap:wrap}
+.fp{padding:4px 12px;border-radius:20px;font-size:12px;cursor:pointer;border:1px solid var(--border);background:#fff;color:var(--text-2);transition:all .15s}
+.fp.active{background:var(--blue-lt);color:var(--blue);border-color:var(--blue-md)}
+
+/* VIEW TOGGLE */
+.vtog{display:flex;gap:3px}
+.vb{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:var(--rs);cursor:pointer;color:var(--text-3);background:#fff}
+.vb.active{background:var(--blue-lt);border-color:var(--blue);color:var(--blue)}
+
+/* TASK LIST */
+.thd{display:grid;grid-template-columns:2.5fr 1.8fr 1fr 1.1fr 1.1fr 1.2fr;padding:9px 14px;font-size:12px;font-weight:500;color:var(--text-2);background:#f8fafc;border-bottom:1px solid var(--border)}
+.trow{display:grid;grid-template-columns:2.5fr 1.8fr 1fr 1.1fr 1.1fr 1.2fr;padding:12px 14px;border-bottom:1px solid var(--border);align-items:center;font-size:13px;transition:background .1s}
+.trow:last-child{border-bottom:none}
+.trow:hover{background:#f8fbfd}
+.tcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.tcard{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;transition:box-shadow .15s,border-color .15s}
+.tcard:hover{box-shadow:0 2px 12px rgba(21,88,160,.1);border-color:var(--blue)}
+.al{font-size:12px;color:var(--blue);cursor:pointer;margin-right:8px}
+.al:hover{text-decoration:underline}
+.al.danger{color:var(--red)}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;gap:0}
+.step-i{display:flex;gap:1rem;padding-bottom:1.5rem;position:relative}
+.step-i::before{content:'';position:absolute;left:15px;top:32px;width:2px;background:var(--blue-lt);bottom:0}
+.step-i:last-child::before{display:none}
+.step-i:last-child{padding-bottom:0}
+.snum{width:32px;height:32px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0;z-index:1}
+.sbody h4{font-size:14px;font-weight:600;margin-bottom:4px;padding-top:5px}
+.sbody p{font-size:13px;color:var(--text-2);line-height:1.75}
+
+/* DOC TOC */
+.doc-toc{position:sticky;top:1.75rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1rem;height:fit-content}
+.doc-toc h4{font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:.75rem;letter-spacing:.5px}
+.doc-toc a{display:block;font-size:12px;color:var(--text-2);padding:4px 0 4px 8px;cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.doc-toc a:hover,.doc-toc a.active{color:var(--blue);border-left-color:var(--blue)}
+.doc-toc a.h3{padding-left:18px;font-size:11px}
+.doc-content h2{font-size:17px;font-weight:600;margin:1.75rem 0 .75rem;padding-top:1.25rem;border-top:1px solid var(--border);color:var(--blue-dk)}
+.doc-content h2:first-child{border-top:none;padding-top:0;margin-top:0}
+.doc-content h3{font-size:14px;font-weight:600;margin:.75rem 0 .5rem}
+.doc-content p{font-size:13px;color:var(--text-2);line-height:1.85;margin-bottom:.75rem}
+.doc-content ul,.doc-content ol{margin:.5rem 0 .75rem 1.25rem}
+.doc-content li{font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:3px}
+.doc-note{background:var(--blue-lt);border-left:3px solid var(--blue);padding:.75rem 1rem;border-radius:0 var(--rs) var(--rs) 0;margin:.75rem 0;font-size:12px;color:var(--blue-dk)}
+.doc-warn{background:var(--amber-bg);border-left:3px solid #f59e0b;padding:.75rem 1rem;border-radius:0 var(--rs) var(--rs) 0;margin:.75rem 0;font-size:12px;color:var(--amber)}
+.code-block{background:#1e293b;color:#e2e8f0;padding:1rem;border-radius:var(--rs);font-size:12px;font-family:monospace;margin:.75rem 0;overflow-x:auto;line-height:1.7}
+.code-block .cmd{color:#7dd3fc}
+.code-block .arg{color:#86efac}
+.code-block .cmt{color:#64748b}
+
+/* HOME */
+.hero{background:linear-gradient(135deg,#071829 0%,#0d2b4e 45%,#1558a0 100%);color:#fff;padding:3.5rem 2rem;text-align:center}
+.hero h1{font-size:42px;font-weight:800;letter-spacing:3px;margin-bottom:1.25rem}
+.hero-desc{max-width:820px;margin:0 auto .65rem;font-size:15px;line-height:1.85;opacity:.9}
+.hero-desc-en{max-width:820px;margin:0 auto;font-size:12px;opacity:.58;line-height:1.7}
+.fcs{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;padding:1.75rem 2rem;max-width:96%;margin:0 auto}
+.fc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1.75rem}
+.fc h3{font-size:16px;font-weight:600;margin-bottom:3px}
+.fc-en{font-size:11px;color:var(--text-3);margin-bottom:.75rem}
+.fc p{font-size:13px;color:var(--text-2);line-height:1.75;margin-bottom:.5rem}
+.metrics-bar{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex}
+.mi{flex:1;display:flex;align-items:center;gap:14px;padding:1.5rem 2rem;border-right:1px solid var(--border)}
+.mi:last-child{border-right:none}
+.mi-icon{width:40px;height:40px;background:var(--blue-lt);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mi-icon svg{width:19px;height:19px;fill:var(--blue)}
+.mi-val{font-size:24px;font-weight:700;line-height:1}
+.mi-lbl{font-size:10px;color:var(--text-3);font-weight:500;margin-top:2px;letter-spacing:.5px}
+.platform-wrap{max-width:96%;margin:0 auto;padding:2rem 2rem}
+.platform-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:2rem}
+.nbc-tag{display:inline-flex;align-items:center;gap:5px;background:var(--blue-lt);color:var(--blue);font-size:11px;font-weight:600;padding:3px 8px;border-radius:4px;margin-bottom:.75rem}
+.fl-list{display:flex;flex-direction:column;gap:1rem}
+.fl-item{display:flex;align-items:flex-start;gap:10px}
+.fl-dot{width:7px;height:7px;background:var(--blue);border-radius:50%;flex-shrink:0;margin-top:5px}
+.fl-item strong{font-size:13px;display:block;margin-bottom:2px}
+.fl-item span{font-size:12px;color:var(--text-2)}
+.info-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:96%;margin:0 auto;padding:0 2rem 2rem}
+.ic{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1.75rem;display:flex;flex-direction:column}
+.ic-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+.ic h3{font-size:14px;font-weight:600;margin-bottom:.75rem}
+.ic ul{list-style:none;margin-bottom:1rem;flex:1}
+.ic ul li{font-size:12px;color:var(--text-2);padding:3px 0;display:flex;align-items:center;gap:6px}
+.ic ul li::before{content:'';width:5px;height:5px;background:var(--text-3);border-radius:50%;flex-shrink:0}
+
+/* PROJECT FORM STEPS */
+.pstep-bar{padding:12px 1.5rem;background:#f8fafc;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0}
+.pstep{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);cursor:pointer;white-space:nowrap;padding:0 4px}
+.pstep.active{color:var(--blue);font-weight:500}
+.pstep.done{color:var(--green)}
+.pstep-num{width:20px;height:20px;border-radius:50%;background:var(--bg);border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.pstep.active .pstep-num{background:var(--blue);border-color:var(--blue);color:#fff}
+.pstep.done .pstep-num{background:var(--green);border-color:var(--green);color:#fff}
+.pstep-line{flex:1;height:1px;background:var(--border);min-width:20px}
+.radio-card{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--border);border-radius:var(--rs);padding:12px;cursor:pointer;transition:all .15s;margin-bottom:8px}
+.radio-card:hover{border-color:var(--blue-md)}
+.rc-t1{border-color:var(--t1-bd)!important;background:#f0fdf4}
+.rc-t2{border-color:var(--t2-bd)!important;background:#eff6ff}
+.rc-t3{border-color:var(--t3-bd)!important;background:#fdf2f8}
+.conf-box{border:1px solid var(--border);border-radius:var(--rs);padding:12px;margin-bottom:10px}
+.conf-q{font-size:13px;font-weight:500;margin-bottom:4px}
+.conf-hint{font-size:12px;color:var(--text-2);margin-bottom:8px;line-height:1.6}
+.rr{display:flex;gap:10px;flex-wrap:wrap}
+.rr label{display:flex;align-items:center;gap:5px;font-size:13px;cursor:pointer;padding:5px 12px;border:1px solid var(--border);border-radius:4px;transition:all .15s}
+.rr label:hover{border-color:var(--blue)}
+.kw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:4px}
+.review-sec{border:1px solid var(--border);border-radius:var(--rs);padding:12px;margin-bottom:10px}
+.review-sec h4{font-size:11px;font-weight:600;color:var(--text-2);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);letter-spacing:.5px}
+.rv-row{display:flex;font-size:13px;padding:4px 0;gap:8px}
+.rv-row .rk{color:var(--text-3);width:120px;flex-shrink:0;font-size:12px}
+
+/* RESOURCE SELECTOR */
+.res-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px}
+.rp{border:1.5px solid var(--border);border-radius:var(--rs);padding:10px;cursor:pointer;text-align:center;transition:all .15s}
+.rp:hover{border-color:var(--blue)}
+.rp.sel{border-color:var(--blue);background:var(--blue-lt)}
+.rp-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.rp-spec{font-size:11px;color:var(--text-3)}
+.rp-cost{font-size:11px;color:var(--blue);margin-top:4px}
+.custom-res{border:1px solid var(--border);border-radius:var(--rs);padding:12px;background:#f8fafc;display:none;margin-top:8px}
+.custom-res.show{display:block}
+.res-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.res-row:last-child{margin:0}
+.res-row label{font-size:12px;color:var(--text-2);width:60px;flex-shrink:0}
+.rbs{display:flex;gap:4px;flex-wrap:wrap}
+.rb{padding:3px 10px;border:1px solid var(--border);border-radius:4px;font-size:12px;cursor:pointer;background:#fff;transition:all .15s}
+.rb:hover{border-color:var(--blue)}
+.rb.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* TIER CARDS */
+.tier-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:.75rem}
+.tc{border-radius:var(--r);padding:1.25rem;border:1.5px solid}
+.tc1{background:#f0fdf4;border-color:var(--t1-bd)}
+.tc2{background:#eff6ff;border-color:var(--t2-bd)}
+.tc3{background:#fdf2f8;border-color:var(--t3-bd)}
+.tc h4{font-size:14px;font-weight:700;margin-bottom:.5rem}
+.tc .tc-data{font-size:12px;color:var(--text-2);margin-bottom:.5rem;line-height:1.6}
+.tc .tc-cost{font-size:13px;font-weight:600;margin-top:.75rem}
+.tc .tc-meta{font-size:11px;color:var(--text-3);margin-top:4px}
+
+/* BILLING */
+.b-stat{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;text-align:center}
+.b-stat .big{font-size:26px;font-weight:700}
+.b-stat .lbl{font-size:11px;color:var(--text-3);margin-top:4px}
+
+/* COLLAB TAGS */
+.ctag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;background:var(--blue-lt);border:1px solid var(--blue-md);border-radius:var(--rs);font-size:13px;margin:3px}
+
+/* PROFILE */
+.prof-hd{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;display:flex;align-items:center;gap:1.5rem;margin-bottom:1.25rem}
+.prof-av{width:60px;height:60px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700;flex-shrink:0}
+.training-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.training-item:last-child{border-bottom:none}
+
+/* ANALYSIS WORKFLOW */
+.workflow-hero{background:linear-gradient(135deg,#071829,#1558a0);color:#fff;padding:2rem;border-radius:var(--r);margin-bottom:1.25rem}
+.wf-step{display:flex;align-items:flex-start;gap:1rem;padding:1rem 0;border-bottom:1px solid var(--border)}
+.wf-step:last-child{border-bottom:none}
+.wf-step-num{width:28px;height:28px;background:var(--blue-lt);color:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+.tool-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;display:flex;align-items:flex-start;gap:12px}
+.tool-icon{width:36px;height:36px;background:var(--blue-lt);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700;color:var(--blue)}
+.cost-est{background:#f8fafc;border:1px solid var(--border);border-radius:var(--rs);padding:12px}
+.cost-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.cost-row:last-child{border-bottom:none}
+
+/* RESULT PAGE */
+.result-metric{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;text-align:center}
+.result-metric .rm-val{font-size:20px;font-weight:700;color:var(--blue)}
+.result-metric .rm-lbl{font-size:11px;color:var(--text-3);margin-top:3px}
+.progress-bar{height:10px;background:var(--bg);border-radius:5px;overflow:hidden;margin-top:6px}
+.pb-fill{height:100%;border-radius:5px;background:var(--blue)}
+
+/* FOOTER */
+.footer{background:#071829;color:#6a88a4;padding:2.5rem 2rem 1.5rem}
+.footer-inner{max-width:96%;margin:0 auto}
+.footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem}
+.footer-brand h2{font-size:20px;font-weight:700;color:#fff;letter-spacing:1px}
+.footer-sub{font-size:10px;color:#3a5570;letter-spacing:1px;margin-bottom:4px}
+.footer-brand p{font-size:12px;margin-top:.5rem;line-height:1.6}
+.footer-col h4{font-size:11px;font-weight:600;color:#fff;margin-bottom:.75rem;letter-spacing:.5px}
+.footer-col a{display:block;font-size:12px;color:#456;margin-bottom:6px;cursor:pointer;transition:color .15s}
+.footer-col a:hover{color:#fff}
+.footer-bot{border-top:1px solid #0d2b4e;padding-top:1rem;display:flex;justify-content:space-between;font-size:11px;color:#3a5570}
+</style>
+</head>
+<body>
+
+<!-- PUBLIC NAV -->
+<nav class="pub-nav" id="pub-nav">
+  <div class="logo-wrap" onclick="goto('home')">
+    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
+    <span class="logo-text">NBC CLOUD</span>
+  </div>
+  <div class="nav-links">
+    <div class="nl" data-p="home" onclick="goto('home')">首页</div>
+    <div class="nl" data-p="data" onclick="goto('data')">数据</div>
+    <div class="nl" data-p="access" onclick="goto('access')">申请访问</div>
+    <div class="nl" data-p="analysis" onclick="goto('analysis')">分析</div>
+    <div class="nl" data-p="submit" onclick="goto('submit')">数据递交</div>
+    <div class="nl" data-p="resources" onclick="goto('resources')">资源</div>
+    <div class="nl" data-p="about" onclick="goto('about')">关于</div>
+  </div>
+  <div class="nav-right">
+    <span class="lang-pill">中 / EN</span>
+    <div id="pub-user"><button class="btn-login" onclick="doLogin()">登录 / 注册</button></div>
+  </div>
+</nav>
+
+<!-- APP SHELL (logged in) -->
+<div id="shell" style="display:none" class="app-shell">
+  <div class="content-area" id="shell-content"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo-row">
+        <div class="sb-icon"><svg viewBox="0 0 24 24"><path fill="#fff" d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg></div>
+        <div><div class="sb-brand-text">NBC CLOUD</div><div class="sb-sub">SMART-NBC</div></div>
+      </div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-item" onclick="goto('home')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> 返回首页</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">研究管理</div>
+      <div class="sb-item" id="sb-projects" onclick="goto('my-projects')"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> 我的项目</div>
+      <div class="sb-item" id="sb-workspace" onclick="goto('my-workspace')"><svg viewBox="0 0 24 24"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4v-2z"/></svg> 工作空间</div>
+      <div class="sb-item" id="sb-tasks" onclick="goto('my-tasks')"><svg viewBox="0 0 24 24"><path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg> 我的任务</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">账户</div>
+      <div class="sb-item" id="sb-billing" onclick="goto('billing')"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> 计费中心</div>
+      <div class="sb-item" id="sb-profile" onclick="goto('profile')"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> 个人资料</div>
+    </div>
+    <div class="sb-divider"></div>
+    <div class="sb-item" onclick="doLogout()" style="color:rgba(255,255,255,.4)"><svg viewBox="0 0 24 24" style="fill:rgba(255,255,255,.35)"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg> 退出登录</div>
+    <div class="sb-user">
+      <div class="sb-avatar">罗</div>
+      <div><div class="sb-uname">luo@smartnbc.cn</div><div class="sb-urole">学术研究账户</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLIC CONTENT -->
+<div id="pub-content"></div>
+
+<!-- MODALS -->
+<div id="m-new-proj" style="display:none">
+  <div class="modal-bg" onclick="event.target===this&&closeM('m-new-proj')">
+    <div class="modal modal-wide" onclick="event.stopPropagation()">
+      <div class="mhd"><div><h3>项目申请 <span style="font-size:11px;color:var(--text-3);font-weight:400;margin-left:8px">Application for Data Access</span></h3><div style="font-size:11px;color:var(--text-3);margin-top:2px">所有项目初始周期为 36 个月</div></div><div class="mx" onclick="closeM('m-new-proj')">✕</div></div>
+      <div class="pstep-bar" id="pstep-bar">
+        <div class="pstep active" id="ps1" onclick="goProjStep(1)"><span class="pstep-num">1</span> A. 申请详情</div><div class="pstep-line"></div>
+        <div class="pstep" id="ps2" onclick="goProjStep(2)"><span class="pstep-num">2</span> B. 数据层级</div><div class="pstep-line"></div>
+        <div class="pstep" id="ps3" onclick="goProjStep(3)"><span class="pstep-num">3</span> C. 协作者</div><div class="pstep-line"></div>
+        <div class="pstep" id="ps4" onclick="goProjStep(4)"><span class="pstep-num">4</span> D. 确认提交</div>
+      </div>
+      <div class="mbody" id="pform-body"></div>
+      <div class="mft"><button class="btn btn-g" onclick="closeM('m-new-proj')">取消</button><button class="btn btn-g" id="pp-btn" onclick="goProjStep(pS-1)" style="display:none">← 上一步</button><button class="btn btn-p" id="pn-btn" onclick="pNext()">下一步 →</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="m-new-task" style="display:none">
+  <div class="modal-bg" onclick="event.target===this&&closeM('m-new-task')">
+    <div class="modal modal-wide" onclick="event.stopPropagation()">
+      <div class="mhd"><h3>新建分析任务</h3><div class="mx" onclick="closeM('m-new-task')">✕</div></div>
+      <div class="mbody" id="task-form-body"></div>
+      <div class="mft"><button class="btn btn-g" onclick="closeM('m-new-task')">取消</button><button class="btn btn-g" onclick="saveTaskDraft()">保存草稿</button><button class="btn btn-p" onclick="submitTask()">提交任务</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="m-result" style="display:none">
+  <div class="modal-bg" onclick="event.target===this&&closeM('m-result')">
+    <div class="modal modal-wide" onclick="event.stopPropagation()">
+      <div class="mhd"><h3 id="result-title">分析结果</h3><div class="mx" onclick="closeM('m-result')">✕</div></div>
+      <div class="mbody" id="result-body"></div>
+      <div class="mft"><button class="btn btn-g" onclick="closeM('m-result')">关闭</button><button class="btn btn-o" onclick="reqExport()">申请导出结果</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="m-export" style="display:none">
+  <div class="modal-bg" onclick="event.target===this&&closeM('m-export')">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="mhd"><h3>申请导出结果</h3><div class="mx" onclick="closeM('m-export')">✕</div></div>
+      <div class="mbody">
+        <div class="doc-warn" style="margin-bottom:1rem">导出结果须经 DAC 审批（Tier 2 约 2-3 个工作日）。原始测序数据不可导出。</div>
+        <div class="fg"><label class="fl">导出内容<span class="req">*</span></label>
+          <div style="display:flex;flex-direction:column;gap:6px;border:1px solid var(--border);border-radius:var(--rs);padding:10px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked> 比对统计报告（alignment_stats.txt）</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked> FastQC / MultiQC HTML 报告</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> 排序后 BAM 文件（sample.sorted.bam，50.3 GB）<span style="font-size:11px;color:var(--red)">需额外说明理由</span></label>
+          </div>
+        </div>
+        <div class="fg"><label class="fl">导出用途说明<span class="req">*</span></label><textarea class="ft" placeholder="请说明导出数据的使用目的及安全保障措施…"></textarea></div>
+      </div>
+      <div class="mft"><button class="btn btn-g" onclick="closeM('m-export')">取消</button><button class="btn btn-p" onclick="submitExport()">提交导出申请</button></div>
+    </div>
+  </div>
+</div>
+
+<style>
+.pstep{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3);cursor:pointer;white-space:nowrap;padding:0 4px}
+.pstep.active{color:var(--blue);font-weight:500}.pstep.done{color:var(--green)}
+.pstep-num{width:20px;height:20px;border-radius:50%;background:var(--bg);border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600}
+.pstep.active .pstep-num{background:var(--blue);border-color:var(--blue);color:#fff}
+.pstep.done .pstep-num{background:var(--green);border-color:var(--green);color:#fff}
+.pstep-line{flex:1;height:1px;background:var(--border);min-width:20px}
+</style>
+
+<script>
+var loggedIn=false,curPage='home',curProj=null,curTask=null,taskFilter='all',taskView='list';
+
+/* ── DATA ── */
+var projects=[
+  {id:'PRJ-2026-001',name:'多组学 xQTL 关联分析研究',inst:'深圳医学科学院',status:'approved',tier:2,created:'2026-03-12',desc:'探索基因型与血浆蛋白质、转录组的 xQTL 关联',datasets:['GTOP v2.1','SMART-NBC 表型库'],tags:['xQTL','多组学','蛋白质组'],pi:'罗博士'},
+  {id:'PRJ-2026-002',name:'心血管疾病 GWAS 整合分析',inst:'北京大学医学部',status:'approved',tier:2,created:'2026-04-08',desc:'基于 SMR 方法整合 GWAS 与 eQTL 数据',datasets:['GTOP v2.1'],tags:['GWAS','SMR'],pi:'张教授'},
+  {id:'PRJ-2026-003',name:'空间转录组脑区图谱构建',inst:'华南理工大学',status:'pending',tier:3,created:'2026-05-01',desc:'利用 CryoSeek 数据构建大脑皮层空间图谱',datasets:['CryoSeek'],tags:['空间转录组'],pi:'李研究员'},
+];
+
+var tasks=[
+  {id:'JOB-20260518-003',proj:'PRJ-2026-001',name:'BWA-MEM2 DNA 比对分析',workflow:'BWA-MEM2 Mapping',status:'done',submitted:'2026-05-16 14:00',duration:'5h 23min',cpu:'8 vCPU',mem:'32 GB',tier:2,coreH:43,hasResult:true},
+  {id:'JOB-20260512-001',proj:'PRJ-2026-001',name:'xQTL 关联分析 — 肝脏转录组',workflow:'SMR & HEIDI',status:'running',submitted:'2026-05-18 09:14',duration:'2h 14min',cpu:'4 vCPU',mem:'16 GB',tier:2,coreH:9,hasResult:false},
+  {id:'JOB-20260511-008',proj:'PRJ-2026-001',name:'GWAS Summary 整合分析',workflow:'SMR & HEIDI',status:'done',submitted:'2026-05-17 22:00',duration:'4h 52min',cpu:'8 vCPU',mem:'64 GB',tier:2,coreH:39,hasResult:true},
+  {id:'JOB-20260511-006',proj:'PRJ-2026-001',name:'表观基因组差异分析',workflow:'ATAC-seq Workflow',status:'failed',submitted:'2026-05-17 10:05',duration:'0h 22min',cpu:'4 vCPU',mem:'16 GB',tier:2,coreH:0,hasResult:false},
+  {id:'JOB-20260518-002',proj:'PRJ-2026-001',name:'蛋白质组 pQTL 分析',workflow:'pQTL Analysis',status:'queued',submitted:'2026-05-18 10:32',duration:'—',cpu:'16 vCPU',mem:'64 GB',tier:2,coreH:0,hasResult:false},
+  {id:'JOB-20260514-030',proj:'PRJ-2026-002',name:'精细定位分析',workflow:'Fine-mapping (SuSiE)',status:'running',submitted:'2026-05-18 08:00',duration:'3h 42min',cpu:'8 vCPU',mem:'32 GB',tier:2,coreH:30,hasResult:false},
+  {id:'JOB-20260511-020',proj:'PRJ-2026-002',name:'GWAS QC 质控流程',workflow:'GWAS QC Pipeline',status:'done',submitted:'2026-05-15 13:00',duration:'1h 10min',cpu:'4 vCPU',mem:'16 GB',tier:1,coreH:5,hasResult:true},
+];
+
+/* ── ROUTING ── */
+function goto(p,extra){
+  curPage=p;
+  if(extra)curProj=extra;
+  var loggedPages=['my-projects','my-workspace','my-tasks','billing','profile'];
+  if(loggedPages.includes(p)&&!loggedIn){doLogin();return}
+  updateNav();
+  var isApp=loggedPages.includes(p);
+  document.getElementById('pub-nav').style.display=isApp?'none':'flex';
+  document.getElementById('pub-content').style.display=isApp?'none':'block';
+  document.getElementById('shell').style.display=isApp?'flex':'none';
+  if(isApp){
+    updateSB(p);
+    document.getElementById('shell-content').innerHTML=renderPage(p);
+  }else{
+    document.getElementById('pub-content').innerHTML=renderPage(p);
+  }
+  window.scrollTo(0,0);
+}
+function renderPage(p){
+  var m={home:rHome,data:rData,'data-gtop':()=>rDB('GTOP'),'data-cryoseek':()=>rDB('CryoSeek'),'data-1kcp':()=>rDB('1KCP'),access:rAccess,analysis:rAnalysis,submit:rSubmit,resources:rResources,about:rAbout,'my-projects':rProjects,'my-workspace':rWorkspace,'my-tasks':rTasks,billing:rBilling,profile:rProfile,'result-bwa':rBWAResult};
+  return(m[p]||rHome)();
+}
+function updateNav(){document.querySelectorAll('.nl[data-p]').forEach(el=>el.classList.toggle('active',el.dataset.p===curPage))}
+function updateSB(p){
+  document.querySelectorAll('.sb-item[id^=sb-]').forEach(el=>el.classList.remove('active'));
+  var m={'my-projects':'sb-projects','my-workspace':'sb-workspace','my-tasks':'sb-tasks','billing':'sb-billing','profile':'sb-profile'};
+  if(m[p])document.getElementById(m[p]).classList.add('active');
+}
+function doLogin(){loggedIn=true;document.getElementById('pub-user').innerHTML=`<div style="display:flex;align-items:center;gap:6px;cursor:pointer;color:rgba(255,255,255,.85);font-size:13px" onclick="goto('my-projects')"><div style="width:26px;height:26px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">罗</div>我的项目</div>`;goto('my-projects')}
+function doLogout(){loggedIn=false;document.getElementById('pub-user').innerHTML=`<button class="btn-login" onclick="doLogin()">登录 / 注册</button>`;goto('home')}
+
+/* ── HELPERS ── */
+function sBadge(s){var m={running:['b-run','d-run','运行中'],done:['b-done','d-done','已完成'],failed:['b-fail','d-fail','失败'],queued:['b-q','d-q','排队中'],pending:['b-pend','','审核中'],approved:['b-ok','d-done','已批准']};var d=m[s]||['b-pend','','未知'];return`<span class="badge ${d[0]}">${d[1]?`<span class="dot ${d[1]}"></span>`:''}${d[2]}</span>`}
+function tBadge(t){return`<span class="badge b-t${t}">Tier ${t}</span>`}
+function closeM(id){document.getElementById(id).style.display='none'}
+function showM(id){document.getElementById(id).style.display='flex';if(id==='m-new-proj'){pS=1;pD={};renderPForm();}if(id==='m-new-task'){renderTaskForm();}}
+function reqExport(){closeM('m-result');showM('m-export')}
+function submitExport(){closeM('m-export');alert('导出申请已提交。DAC 将在 2-3 个工作日内完成审核，审核通过后将发送下载链接至您的邮箱。')}
+function renderFooter(){return`<footer class="footer"><div class="footer-inner"><div class="footer-top"><div class="footer-brand"><div class="footer-sub">SMART</div><h2>NBC CLOUD</h2><p>Biomedical data access, cloud-based analysis, and controlled data sharing.</p><p style="margin-top:.4rem">© 2026 深圳国家基因库 CNGB. All rights reserved.</p></div><div class="footer-col"><h4>关于 About</h4><a onclick="goto('about')">关于 NBC Cloud</a><a onclick="goto('about')">关于 SMART-NBC</a><a onclick="goto('resources')">联系我们</a></div><div class="footer-col"><h4>数据 Data</h4><a onclick="goto('data-gtop')">GTOP 数据库</a><a onclick="goto('data-cryoseek')">CryoSeek</a><a onclick="goto('data')">数据目录</a></div><div class="footer-col"><h4>访问 Access</h4><a onclick="goto('access')">如何申请</a><a onclick="goto('access')">数据访问政策</a><a onclick="goto('analysis')">在线分析平台</a></div><div class="footer-col"><h4>资源 Support</h4><a onclick="goto('resources')">文档与教程</a><a onclick="goto('resources')">FAQ</a><a onclick="goto('submit')">数据递交</a></div></div><div class="footer-bot"><span>Copyright © 2026 NBC CLOUD. All Rights Reserved.</span><div style="display:flex;gap:1.5rem"><a>隐私政策</a><a>使用条款</a></div></div></div></footer>`}
+
+/* ═══════════════ HOME ═══════════════ */
+function rHome(){return`
+<div class="hero">
+  <h1>NBC CLOUD</h1>
+  <p class="hero-desc">NBC Cloud 是依托 SMART-National Biobank of China（SMART-NBC）建设的云端科研分析平台，为全球研究者提供授权的基因组、多组学及临床表型数据访问，支持在安全云环境中开展大规模生物医学研究。</p>
+  <p class="hero-desc-en">NBC Cloud is a cloud-based research analysis platform built on SMART-National Biobank of China (SMART-NBC), providing authorized access to genomic, multi-omics, and clinical phenotype data for large-scale biomedical research in a secure cloud environment.</p>
+</div>
+<div class="fcs">
+  <div class="fc"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px">在线分析平台</div><h3>在线 NBC Cloud 分析</h3><div class="fc-en">Online NBC Cloud Platform</div><p>提供专为多组学数据分析设计的云端在线计算环境，内置 60 余个标准化分析流程，支持 BWA-MEM2 比对、xQTL 分析、单细胞聚类等，并可通过 Jupyter Notebook 进行自定义分析。</p><button class="btn btn-p" style="margin-top:.75rem" onclick="goto('analysis')">立即使用 →</button></div>
+  <div class="fc"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px">申请数据访问</div><h3>申请数据访问</h3><div class="fc-en">Apply for Data Access</div><p>注册账户、提交科研项目申请，经 DAC 审批后在 NBC Cloud 云端工作空间内使用授权数据集。数据按 Tier 1/2/3 分级管理，数据不出平台，结果导出须审批。</p><button class="btn btn-o" style="margin-top:.75rem" onclick="goto('access')">立即申请 →</button></div>
+</div>
+<div class="metrics-bar">
+  <div class="mi"><div class="mi-icon"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><div><div class="mi-val">1,586</div><div class="mi-lbl">SAMPLES 样本数</div></div></div>
+  <div class="mi"><div class="mi-icon"><svg viewBox="0 0 24 24"><path d="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z"/></svg></div><div><div class="mi-val">4 PB</div><div class="mi-lbl">DATA 数据量</div></div></div>
+  <div class="mi"><div class="mi-icon"><svg viewBox="0 0 24 24"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4v-2z"/></svg></div><div><div class="mi-val">60+</div><div class="mi-lbl">ANALYSIS TOOLS 分析工具</div></div></div>
+  <div class="mi"><div class="mi-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div><div><div class="mi-val">—</div><div class="mi-lbl">PROJECTS 已批准项目</div></div></div>
+</div>
+<div class="platform-wrap"><div class="platform-grid">
+  <div><div class="nbc-tag">NBC 数据资源</div><h2 style="font-size:17px;font-weight:600;margin-bottom:.75rem">NBC Cloud 数据整合与处理平台</h2><p style="font-size:13px;color:var(--text-2);line-height:1.85">研究者可通过 NBC Cloud 使用来自 SMART-NBC 的授权数据，支持基因组、转录组、蛋白质组及临床表型数据的整合分析。数据访问和结果导出均须遵照平台政策及 DAC 审批要求，数据不可下载至本地。</p><button class="btn btn-o btn-sm" style="margin-top:.75rem" onclick="goto('about')">了解更多 →</button></div>
+  <div><div class="sec-title">平台功能</div><div class="fl-list"><div class="fl-item"><div class="fl-dot"></div><div><strong>多维度分析工具</strong><span>60+ 标准化流程，覆盖基因组、转录组、蛋白质组、多组学整合</span></div></div><div class="fl-item"><div class="fl-dot"></div><div><strong>标准化流程库</strong><span>开箱即用的可重复分析流程，支持参数化配置</span></div></div><div class="fl-item"><div class="fl-dot"></div><div><strong>弹性计算资源</strong><span>可选 CPU/内存规格，支持 GPU，按实际用量计算核时</span></div></div><div class="fl-item"><div class="fl-dot"></div><div><strong>数据安全与可审计性</strong><span>受控访问，全程日志留痕，结果导出须审批</span></div></div></div></div>
+</div></div>
+<div class="info-cards">
+  <div class="ic"><div class="ic-icon" style="background:var(--blue-lt)"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--blue)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div><h3>NBC Cloud 是什么？</h3><ul><li>关于 SMART-NBC</li><li>NBC Cloud 平台介绍</li><li>GTOP 多组学资源</li><li>云端分析环境</li></ul><button class="btn btn-g btn-sm" onclick="goto('about')">了解更多 →</button></div>
+  <div class="ic"><div class="ic-icon" style="background:#dcfce7"><svg width="24" height="24" viewBox="0 0 24 24" fill="#15803d"><path d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4v-2z"/></svg></div><h3>我可以访问哪些数据？</h3><ul><li>GTOP 多组学数据集（Tier 2）</li><li>CryoSeek 空间转录组（Tier 3）</li><li>数据展示与目录</li><li>数据发布计划</li></ul><button class="btn btn-g btn-sm" onclick="goto('data')">了解更多 →</button></div>
+  <div class="ic"><div class="ic-icon" style="background:var(--amber-bg)"><svg width="24" height="24" viewBox="0 0 24 24" fill="var(--amber)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div><h3>如何申请使用？</h3><ul><li>注册并完成机构认证</li><li>提交数据访问申请（DAR）</li><li>经 DAC 审批后启动工作空间</li><li>在云端运行分析，导出须审批</li></ul><button class="btn btn-g btn-sm" onclick="goto('access')">了解更多 →</button></div>
+</div>
+${renderFooter()}`}
+
+/* ═══════════════ DATA ═══════════════ */
+function rData(){return`<div class="page"><div class="ph"><h1>数据目录 <span style="font-size:14px;color:var(--text-3);font-weight:400;margin-left:6px">Data Catalog</span></h1><p>按 Tier 分级管理，均需申请授权后访问</p></div>
+<div class="card" style="margin-bottom:1.25rem;background:linear-gradient(135deg,#eff6ff,#e8f2fb);border-color:var(--blue-md)"><div style="font-size:13px;font-weight:600;color:var(--blue-dk);margin-bottom:.75rem">数据访问分级说明</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+  <div>${tBadge(1)}<p style="font-size:12px;color:var(--text-2);margin-top:4px">基础元数据、脱敏汇总数据。常规审批 3-5 个工作日，可有限导出汇总结果。</p></div>
+  <div>${tBadge(2)}<p style="font-size:12px;color:var(--text-2);margin-top:4px">样本级数据、检测结果。加强审批 5-10 个工作日，平台内分析，导出须审批。</p></div>
+  <div>${tBadge(3)}<p style="font-size:12px;color:var(--text-2);margin-top:4px">高维组学原始数据、影像。重点审查 10-15 个工作日，原始数据原则上不可导出。</p></div>
+</div></div>
+<div class="tw"><table class="tbl"><thead><tr><th>数据库名称</th><th>层级</th><th>数据类型</th><th>样本量</th><th>数据量</th><th>更新</th><th>状态</th><th></th></tr></thead><tbody>
+<tr style="cursor:pointer" onclick="goto('data-gtop')"><td><div class="tn">GTOP Database</div><div class="tsub">Genotype Tissues-Plasma Omics Project</div></td><td>${tBadge(2)}</td><td><span class="badge b-pend">基因组</span> <span class="badge b-pend">转录组</span> <span class="badge b-pend">蛋白质组</span></td><td>1,586</td><td>700 TB</td><td>2025-12</td><td>${sBadge('approved')}</td><td><button class="btn btn-o btn-xs">详情 →</button></td></tr>
+<tr style="cursor:pointer" onclick="goto('data-cryoseek')"><td><div class="tn">CryoSeek</div><div class="tsub">冷冻切片空间转录组数据库</div></td><td>${tBadge(3)}</td><td><span class="badge b-pend">空间转录组</span></td><td>248</td><td>85 TB</td><td>2026-02</td><td>${sBadge('approved')}</td><td><button class="btn btn-o btn-xs">详情 →</button></td></tr>
+<tr><td><div class="tn">1KCP <span style="font-size:10px;background:var(--amber-bg);color:var(--amber);padding:1px 5px;border-radius:3px;margin-left:4px">即将上线</span></div><div class="tsub">1000 Chinese Patients Cohort</div></td><td>${tBadge(2)}</td><td><span class="badge b-pend">临床队列</span></td><td>1,024</td><td>—</td><td>—</td><td>${sBadge('pending')}</td><td><button class="btn btn-g btn-xs" disabled>详情</button></td></tr>
+</tbody></table></div></div>${renderFooter()}`}
+
+function rDB(db){
+  var info={GTOP:{full:'Genotype Tissues-Plasma Omics Project',tier:2,desc:'GTOP 是一个综合性多组学公开资源，旨在探索基因调控及跨多组学层次的基因型-表型关系，覆盖基因组学、转录组学和蛋白质组学。数据来源于 SMART-NBC 参与者血浆及组织样本，经过严格质控。',stats:[['样本数','1,586'],['数据总量','700 TB'],['基因数','81,938'],['转录本数','468,334']],types:[['基因组学（WGS）','全基因组测序，所有样本','320 TB'],['转录组学（RNA-seq）','blood plasma + tissue bulk/scRNA-seq','280 TB'],['蛋白质组学','血浆质谱，靶向定量','100 TB']]},
+  CryoSeek:{full:'冷冻切片空间转录组数据库',tier:3,desc:'CryoSeek 聚焦冷冻切片原位空间转录组技术，覆盖 12 种组织类型和 248 个样本，提供高分辨率细胞类型分布及基因表达空间图谱。因含高维影像原始数据，敏感级别为 Tier 3。',stats:[['样本数','248'],['数据总量','85 TB'],['组织类型','12'],['切片数','1,892']],types:[['空间转录组（10x Visium）','组织切片，10 μm 分辨率','50 TB'],['高分辨率成像','H&E 染色及荧光显微镜','35 TB']]},
+  '1KCP':{full:'1000 Chinese Patients Cohort',tier:2,desc:'1KCP 是基于中国患者队列的纵向临床数据库，数据库建设中，即将上线。',stats:[['样本数','1,024'],['数据量','待确认']],types:[]}};
+  var d=info[db];
+  return`<div class="page"><div class="bc" onclick="goto('data')">← <span>数据目录</span></div>
+<div class="card" style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1.25rem">
+  <div><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><h1 style="font-size:22px;font-weight:700">${db}</h1>${tBadge(d.tier)}</div>
+  <div style="font-size:13px;color:var(--text-2);margin-bottom:.75rem">${d.full}</div>
+  <p style="font-size:13px;color:var(--text-2);line-height:1.85;max-width:700px">${d.desc}</p></div>
+  <button class="btn btn-p" style="flex-shrink:0" onclick="goto('access')">申请数据访问 →</button>
+</div>
+<div class="g4" style="margin-bottom:1.25rem">${d.stats.slice(0,4).map(s=>`<div class="card" style="text-align:center"><div style="font-size:22px;font-weight:700;color:var(--blue)">${s[1]}</div><div style="font-size:12px;color:var(--text-3);margin-top:4px">${s[0]}</div></div>`).join('')}</div>
+${d.types.length?`<div class="card"><div class="sec-title">数据类型</div><table class="tbl"><thead><tr><th>类型</th><th>描述</th><th>数据量</th></tr></thead><tbody>${d.types.map(t=>`<tr><td style="font-weight:500">${t[0]}</td><td style="color:var(--text-2)">${t[1]}</td><td>${t[2]}</td></tr>`).join('')}</tbody></table></div>`:''}</div>${renderFooter()}`}
+
+/* ═══════════════ ACCESS ═══════════════ */
+function rAccess(){return`<div class="page-doc">
+<div class="doc-toc"><h4>目录</h4>
+  <a onclick="scrollTo(0,0)" class="active">申请概述</a>
+  <a onclick="document.getElementById('s-tier').scrollIntoView({behavior:'smooth'})">数据分级（Tier 1/2/3）</a>
+  <a onclick="document.getElementById('s-steps').scrollIntoView({behavior:'smooth'})">申请步骤</a>
+  <a onclick="document.getElementById('s-portal').scrollIntoView({behavior:'smooth'})">访问门户</a>
+  <div style="border-top:1px solid var(--border);margin-top:.75rem;padding-top:.75rem">
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:6px">快速链接</div>
+    <a onclick="goto('data')">数据目录</a>
+    <a onclick="goto('resources')">文档中心</a>
+    <a onclick="loggedIn?goto('my-projects'):doLogin()">授权访问门户</a>
+  </div>
+</div>
+<div class="doc-content card" style="padding:2rem">
+  <h2 style="margin-top:0;padding-top:0;border-top:none">如何申请数据访问</h2>
+  <p>NBC Cloud 采用基于项目的 DAC（Data Access Committee）受控访问机制。所有数据须经过机构认证和 DAC 审批，按 Tier 1/2/3 分级管理。数据仅限在云端工作空间内使用，不可下载至本地。</p>
+  <div class="doc-note">NBC Cloud 的核心差异：数据不出平台，所有分析在云端受控环境中完成，结果导出须另行申请并经 DAC 审核。</div>
+
+  <h2 id="s-tier">数据访问分级（Tier 1 / 2 / 3）</h2>
+  <p>分级不是简单贴标签，而是对应不同审核强度、使用环境限制和监督要求。</p>
+  <div class="tier-cards">
+    <div class="tc tc1"><h4 style="color:var(--t1)">Tier 1 基础访问</h4><div class="tc-data">基础元数据 · 低敏脱敏数据 · 统计类汇总数据</div><div class="tc-meta">• 常规审批 · 3-5 个工作日<br>• 平台受控环境 / 部分授权有限导出<br>• 基础留痕，可选项目报告</div><div class="tc-cost" style="color:var(--t1)">学术免费（受控配额内）</div></div>
+    <div class="tc tc2"><h4 style="color:var(--t2)">Tier 2 增强访问</h4><div class="tc-data">样本级数据 · 检测结果 · 细粒度临床观察 · 芯片/分型数据</div><div class="tc-meta">• 加强审批 · 5-10 个工作日<br>• 平台内分析，导出须 DAC 审批<br>• 详细留痕，定期项目报告</div><div class="tc-cost" style="color:var(--t2)">学术免费 / 超配额按核时计算</div></div>
+    <div class="tc tc3"><h4 style="color:var(--t3)">Tier 3 受限访问</h4><div class="tc-data">高维组学原始数据（WGS/WES）· 影像原始数据 · 高再识别风险数据</div><div class="tc-meta">• 重点审查 · 10-15 个工作日<br>• 安全沙箱/云端封闭环境<br>• 全量审计，强制定期报告</div><div class="tc-cost" style="color:var(--t3)">须专项申请，安全环境额外收费</div></div>
+  </div>
+
+  <h2 id="s-steps">申请步骤</h2>
+  <div class="steps">
+    <div class="step-i"><div class="snum">1</div><div class="sbody"><h4>注册账户并完成机构认证</h4><p>使用机构邮箱注册 NBC Cloud 账户，上传机构证明文件。在线完成数据保护与研究伦理培训课程，通过测试（70 分以上）后方可提交项目申请。学生须以导师为 PI 提交。</p></div></div>
+    <div class="step-i"><div class="snum">2</div><div class="sbody"><h4>浏览数据目录，确认数据层级</h4><p>在<span style="color:var(--blue);cursor:pointer" onclick="goto('data')">数据目录</span>中浏览可用数据集，确认目标数据所属 Tier 级别。Tier 越高，申请材料和审核周期要求越严格。</p></div></div>
+    <div class="step-i"><div class="snum">3</div><div class="sbody"><h4>创建研究项目并提交 DAR</h4><p>在"我的项目"创建研究项目，按照申请表单填写项目标题（A1）、研究概述（A2，将公开发布）、关键词（A3）、研究属性确认（A4.1/A4.2/A5.1），选择数据层级（B），添加协作者（C），签署 DUA 协议后提交。</p></div></div>
+    <div class="step-i"><div class="snum">4</div><div class="sbody"><h4>DAC 审核与协议签署</h4><p>数据访问委员会（DAC）依据<strong>科学价值、伦理合规、数据最小必要性</strong>三个维度审核申请。通过后需签署数据使用协议（DUA）及材料转移协议（MTA）。</p></div></div>
+    <div class="step-i"><div class="snum">5</div><div class="sbody"><h4>在云端工作空间开展分析</h4><p>审批通过后系统自动开通工作空间并挂载授权数据集。可启动 Jupyter Notebook 或运行 BWA-MEM2 比对、xQTL 分析等标准化流程。分析结果导出须另行提交导出申请。</p></div></div>
+  </div>
+
+  <h2 id="s-portal">授权访问门户</h2>
+  <p>完成注册和培训后，通过授权访问门户创建并管理研究项目。</p>
+  <div style="background:var(--blue-lt);border:1px solid var(--blue-md);border-radius:var(--rs);padding:1rem;display:flex;align-items:center;justify-content:space-between;gap:1rem">
+    <div><div style="font-weight:600;color:var(--blue-dk);margin-bottom:4px">准备好了吗？</div><p style="font-size:13px;color:var(--text-2);margin:0">登录账户，开始创建您的第一个研究项目</p></div>
+    <button class="btn btn-p" style="flex-shrink:0" onclick="loggedIn?goto('my-projects'):doLogin()">进入授权访问门户 →</button>
+  </div>
+</div>
+</div>${renderFooter()}`}
+
+/* ═══════════════ ANALYSIS ═══════════════ */
+function rAnalysis(){
+  var cats=[{c:'BWA-MEM2 / 比对',n:6,hot:true,i:['BWA-MEM2 DNA Mapping ★','HISAT2 RNA Mapping','STAR RNA Alignment','Bowtie2 ChIP-seq','Minimap2 Long-read','SAMtools Processing']},{c:'xQTL 分析',n:12,i:['SMR & HEIDI ★','FastxQTL','TensorQTL','pQTL Association','eQTL Mapping','sQTL Analysis','Colocalization (COLOC2)','MR Analysis','Fine-mapping (SuSiE)','LD Score Regression','cis-QTL Scan','trans-QTL Scan']},{c:'基因组学',n:10,i:['GWAS QC Pipeline','Genotype Imputation','Ancestry PCA','Polygenic Risk Score','Variant Annotation','CNV Analysis','SV Detection','Haplotype Phasing','GWAS Summary Stats','Population Stratification']},{c:'转录组学',n:11,i:['RNA-seq QC','DESeq2','edgeR','Splicing (rMATS)','WGCNA','scRNA-seq (Seurat)','Pseudotime (Monocle3)','Cell Deconvolution','GSEA/GSVA','Isoform Quant.','Trajectory']},{c:'蛋白质组学',n:9,i:['DIA-NN Pipeline','MaxQuant','Protein Quantification','PTM Analysis','PPI Network','Pathway Enrichment','Abundance Correlation','Network Analysis','Protein-trait Assoc.']},{c:'多组学 / 表观',n:8,i:['Multi-omics (MOFA)','ATAC-seq Pipeline','ChIP-seq','WGBS Methylation','Cross-omics QTL','Causal Inference','Hi-C Analysis','Regulatory Network']}];
+  return`<div class="page">
+  <div class="workflow-hero">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+      <div><div style="font-size:11px;opacity:.6;margin-bottom:6px;letter-spacing:1px">NBC CLOUD ANALYSIS PLATFORM</div><h1 style="font-size:22px;font-weight:700;margin-bottom:6px">在线 NBC Cloud 分析平台</h1><p style="font-size:13px;opacity:.85;line-height:1.8">60+ 标准化分析流程 · 弹性计算资源 · 数据不出平台 · 支持 Jupyter Notebook</p></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o" onclick="loggedIn?goto('my-workspace'):doLogin()">我的工作空间</button><button class="btn" style="background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.3)" onclick="loggedIn?showM('m-new-task'):doLogin()">▶ 新建分析任务</button></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem">
+      ${[['⟳','快速开始','申请项目 → 挂载数据 → 选择流程 → 运行'],['⚙','弹性配置','2-32 vCPU，8-256 GB RAM，支持 GPU'],['🔒','受控安全','数据不出平台，结果导出须 DAC 审批'],['📊','完整报告','自动生成 QC 报告，BWA/FastQC/MultiQC']].map(x=>`<div style="background:rgba(255,255,255,.1);border-radius:var(--rs);padding:12px"><div style="font-size:18px;margin-bottom:6px">${x[0]}</div><div style="font-size:12px;font-weight:600;margin-bottom:3px">${x[1]}</div><div style="font-size:11px;opacity:.7">${x[2]}</div></div>`).join('')}
+    </div>
+  </div>
+
+  <div id="s-bwa" class="card" style="margin-bottom:1.25rem;border-left:4px solid var(--blue)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+      <div><div style="font-size:11px;color:var(--text-3);margin-bottom:3px">精选工作流 · Featured Workflow</div><h3 style="font-size:16px;font-weight:700">BWA-MEM2 DNA 比对流程</h3><p style="font-size:12px;color:var(--text-2);margin-top:2px">将 paired-end FASTQ 比对至 hg38 参考基因组，生成排序 BAM 及质控报告</p></div>
+      <button class="btn btn-p" onclick="loggedIn?(showM('m-new-task'),setWorkflow('bwa')):doLogin()">立即运行 →</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem">
+      ${[['输入','Paired-end FASTQ (.fastq.gz)'],['参考基因组','GRCh38/hg38（平台内置）'],['输出','Sorted BAM + BAI + QC 报告'],['推荐配置','8 vCPU / 32 GB · ~5h / 50GB FASTQ']].map(x=>`<div style="background:var(--bg);border-radius:var(--rs);padding:10px"><div style="font-size:11px;color:var(--text-3);margin-bottom:3px">${x[0]}</div><div style="font-size:12px;font-weight:500">${x[1]}</div></div>`).join('')}
+    </div>
+    <div class="sec-title" style="margin-bottom:.75rem">工具链</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem">
+      ${[['BWA','BWA-MEM2 v2.2.1','高速 DNA 比对'],['SAM','SAMtools v1.17','BAM 处理与排序'],['QC','FastQC v0.12.1','序列质量评估'],['MQC','MultiQC v1.14','汇总质控报告']].map(x=>`<div class="tool-card"><div class="tool-icon">${x[0]}</div><div><div style="font-size:12px;font-weight:600">${x[1]}</div><div style="font-size:11px;color:var(--text-3);margin-top:2px">${x[2]}</div></div></div>`).join('')}
+    </div>
+    <div style="margin-top:1rem">
+      <div style="font-size:12px;font-weight:600;margin-bottom:.5rem;color:var(--text-2)">命令行预览</div>
+      <div class="code-block">
+        <span class="cmt"># Step 1: BWA-MEM2 Alignment</span><br>
+        <span class="cmd">bwa-mem2</span> <span class="arg">mem</span> -t 8 -R "@RG\\tID:sample\\tSM:sample\\tPL:ILLUMINA" \\<br>
+        &nbsp;&nbsp;/ref/hg38/GCA_000001405.15.fna \\<br>
+        &nbsp;&nbsp;sample_R1.fastq.gz sample_R2.fastq.gz \\<br>
+        &nbsp;&nbsp;| <span class="cmd">samtools</span> <span class="arg">sort</span> -@ 8 -o sample.sorted.bam<br><br>
+        <span class="cmt"># Step 2: Index BAM</span><br>
+        <span class="cmd">samtools</span> <span class="arg">index</span> sample.sorted.bam<br><br>
+        <span class="cmt"># Step 3: Alignment Statistics</span><br>
+        <span class="cmd">samtools</span> <span class="arg">flagstat</span> sample.sorted.bam &gt; alignment_stats.txt<br><br>
+        <span class="cmt"># Step 4: Quality Control</span><br>
+        <span class="cmd">fastqc</span> sample_R1.fastq.gz sample_R2.fastq.gz -o fastqc_out/<br>
+        <span class="cmd">multiqc</span> fastqc_out/ alignment_stats.txt -o multiqc_report/
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title">全部分析工具库（60+ 流程）</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+    ${cats.map(t=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem"><span style="font-size:13px;font-weight:600;color:var(--blue)">${t.c}</span><span style="font-size:11px;background:var(--blue-lt);color:var(--blue);padding:1px 8px;border-radius:10px">${t.n}</span></div><div>${t.i.slice(0,6).map((item,i)=>`<div style="font-size:12px;color:var(--text-2);padding:4px 6px;border-radius:4px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background=''">${item.replace(' ★','')}<span>${item.includes('★')?'<span style="font-size:10px;background:var(--amber-bg);color:var(--amber);padding:1px 5px;border-radius:3px">热门</span>':''}</span></div>`).join('')}${t.i.length>6?`<div style="font-size:11px;color:var(--text-3);padding:4px 6px">+${t.i.length-6} 更多…</div>`:''}</div></div>`).join('')}
+  </div>
+</div>${renderFooter()}`}
+
+/* ═══════════════ SUBMIT ═══════════════ */
+function rSubmit(){return`<div class="page-doc">
+<div class="doc-toc"><h4>目录</h4>
+  <a class="active">概述</a>
+  <a onclick="document.getElementById('s-prep').scrollIntoView({behavior:'smooth'})">递交前准备</a>
+  <a onclick="document.getElementById('s-format').scrollIntoView({behavior:'smooth'})">数据格式要求</a>
+  <a onclick="document.getElementById('s-meta').scrollIntoView({behavior:'smooth'})">元数据标准</a>
+  <a onclick="document.getElementById('s-ethics').scrollIntoView({behavior:'smooth'})">伦理与合规</a>
+  <a onclick="document.getElementById('s-flow').scrollIntoView({behavior:'smooth'})">递交流程</a>
+  <a onclick="document.getElementById('s-contact').scrollIntoView({behavior:'smooth'})">联系我们</a>
+</div>
+<div class="doc-content card" style="padding:2rem">
+  <div style="border-bottom:1px solid var(--border);padding-bottom:1rem;margin-bottom:1.5rem">
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:4px">NBC CLOUD · 数据递交指南 v1.0</div>
+    <h1 style="font-size:20px;font-weight:700;margin-bottom:4px">NBC Cloud 数据递交指南</h1>
+    <div style="font-size:13px;color:var(--text-2)">Submission Guide for NBC Cloud Data Contributors</div>
+  </div>
+  <div class="doc-warn">数据递交门户（Submission Portal）目前处于规划建设阶段。如有数据递交需求，请通过邮件联系数据团队 <a style="color:var(--amber)">submit@nbccloud.org.cn</a>，我们将提供个性化接入方案。</div>
+  <h2 style="margin-top:0;padding-top:0;border-top:none">概述</h2>
+  <p>NBC Cloud 接受来自合规研究机构的高质量生物医学数据递交。递交的数据将经过质控、标准化处理后纳入数据目录，供授权研究者申请使用。</p>
+  <p>递交数据须符合 FAIR 数据原则（可查找、可访问、可互操作、可重用），并遵守中国《数据安全法》《人类遗传资源管理条例》等相关法规。</p>
+  <div class="doc-note">递交成功的数据将获得 NBC Cloud 数据集 DOI，可在发表论文时引用。平台持续维护数据版本和访问日志。</div>
+  <h2 id="s-prep">递交前准备</h2>
+  <h3>机构资质要求</h3>
+  <ul><li>递交方须为已注册的科研或医疗机构</li><li>递交负责人须拥有 NBC Cloud 认证账户，并通过必要培训</li><li>数据须在合法获取授权范围内递交</li></ul>
+  <h3>数据检查清单</h3>
+  <ul><li>已获得受试者知情同意书，或符合豁免条件</li><li>已获得机构伦理委员会（IRB/EC）批准</li><li>数据已完成去标识化处理（适用时）</li><li>准备好元数据描述文件（按 NBC Cloud 模板）</li><li>涉及跨境数据须提供人类遗传资源行政审批证明</li></ul>
+  <h2 id="s-format">数据格式要求</h2>
+  <h3>基因组学数据</h3>
+  <ul><li>原始测序：FASTQ（gzip 压缩，.fastq.gz）</li><li>比对文件：BAM/CRAM（含 .bai/.crai 索引）</li><li>变异文件：VCF（bgzip + tabix 索引）或 PLINK（.bed/.bim/.fam）</li><li>建议命名规范：{sampleID}_{readPair}_{lane}.fastq.gz</li></ul>
+  <h3>转录组学数据</h3>
+  <ul><li>原始数据：FASTQ（gzip 压缩）</li><li>表达矩阵：CSV / TSV（基因 × 样本，含 gene ID 和样本 ID 表头）</li><li>单细胞数据：MEX 格式（matrix.mtx.gz + barcodes.tsv.gz + features.tsv.gz）或 H5AD</li></ul>
+  <h3>蛋白质组学数据</h3>
+  <ul><li>原始谱图：.raw（Thermo Fisher）或 .mzML</li><li>搜库结果：DIA-NN 输出报告（report.tsv）或 MaxQuant 输出</li><li>定量矩阵：TSV / CSV（蛋白质 × 样本）</li></ul>
+  <h2 id="s-meta">元数据标准</h2>
+  <p>所有递交须附带符合 NBC Cloud 元数据模板的描述文件，包含：</p>
+  <ul><li><strong>样本基本信息</strong>：年龄范围、性别分布、采样时间窗</li><li><strong>采集方案描述</strong>：采样方法、样本保存条件</li><li><strong>测序/检测平台</strong>：仪器型号、试剂盒版本、测序深度</li><li><strong>数据处理流程</strong>：软件版本、参考基因组版本、质控阈值</li></ul>
+  <div class="doc-note">元数据模板：<a style="color:var(--blue);cursor:pointer">NBC_Cloud_Metadata_Template_v1.xlsx</a>（联系数据团队获取）</div>
+  <h2 id="s-ethics">伦理与合规</h2>
+  <ul><li>提供伦理委员会批准证明（文件编号 + 批准日期）</li><li>提交数据使用限制声明（DUL）— 说明数据可用于哪些研究目的</li><li>如涉及跨境数据传输，须提供人类遗传资源行政审批或备案证明</li><li>基因组数据须标注是否含有特殊人群（如稀有病人群）信息</li></ul>
+  <h2 id="s-flow">递交流程</h2>
+  <div class="steps">
+    <div class="step-i"><div class="snum">1</div><div class="sbody"><h4>联系数据团队</h4><p>发送邮件至 <a href="mailto:submit@nbccloud.org.cn" style="color:var(--blue)">submit@nbccloud.org.cn</a> 说明递交意向，我们将分配专属对接人员并提供数据上传凭证。</p></div></div>
+    <div class="step-i"><div class="snum">2</div><div class="sbody"><h4>填写递交申请材料</h4><p>完成数据描述表、伦理声明、数据使用限制声明（DUL）和材料转移协议（MTA）。</p></div></div>
+    <div class="step-i"><div class="snum">3</div><div class="sbody"><h4>数据上传与自动质控</h4><p>按指定格式上传数据至 NBC Cloud 存储节点。平台自动执行格式检查、文件完整性校验和元数据核验，质控报告将在 3-5 个工作日内反馈。</p></div></div>
+    <div class="step-i"><div class="snum">4</div><div class="sbody"><h4>DAC 审核与数据发布</h4><p>DAC 审核通过后，数据纳入目录，分配数据集 DOI，并设置访问 Tier 级别。递交方将收到发布通知邮件。</p></div></div>
+  </div>
+  <h2 id="s-contact">联系我们</h2>
+  <p>数据递交咨询：<a href="mailto:submit@nbccloud.org.cn" style="color:var(--blue)">submit@nbccloud.org.cn</a></p>
+  <p>技术支持：<a href="mailto:support@nbccloud.org.cn" style="color:var(--blue)">support@nbccloud.org.cn</a></p>
+  <p>合作与数据共享：<a href="mailto:collaborate@nbccloud.org.cn" style="color:var(--blue)">collaborate@nbccloud.org.cn</a></p>
+</div></div>${renderFooter()}`}
+
+/* ═══════════════ RESOURCES ═══════════════ */
+function rResources(){return`<div class="page-doc">
+<div class="doc-toc"><h4>资源中心</h4>
+  <a class="active">文档与教程</a>
+  <a onclick="document.getElementById('s-faq').scrollIntoView({behavior:'smooth'})">常见问题 FAQ</a>
+  <a onclick="document.getElementById('s-pub').scrollIntoView({behavior:'smooth'})">发表论文</a>
+  <a onclick="document.getElementById('s-ct').scrollIntoView({behavior:'smooth'})">联系我们</a>
+  <div style="border-top:1px solid var(--border);margin-top:.75rem;padding-top:.75rem">
+    <div style="font-size:11px;color:var(--text-3);margin-bottom:5px">快速入口</div>
+    <a onclick="goto('access')">如何申请访问</a>
+    <a onclick="goto('submit')">数据递交指南</a>
+    <a onclick="goto('analysis')">分析工具库</a>
+    <a onclick="loggedIn?goto('my-projects'):doLogin()">我的项目</a>
+  </div>
+</div>
+<div style="display:flex;flex-direction:column;gap:1.25rem">
+  <div class="card">
+    <div class="sec-title">文档与教程</div>
+    ${[['快速入门指南','Getting Started Guide','如何注册账户并完成首次分析，BWA-MEM2 比对流程演示'],['分析工作流文档','Workflow Documentation','60+ 流程的参数说明、输入输出格式与示例'],['BWA-MEM2 比对教程','BWA-MEM2 Mapping Tutorial','从 FASTQ 到 BAM 的完整操作指南，含 QC 解读'],['Jupyter Notebook 指南','Jupyter Notebook Guide','在云端工作空间使用 Python/R 进行自定义分析'],['数据访问申请指南','DAR Application Guide','申请表单填写规范、Tier 选择建议与常见问题'],['结果导出申请说明','Result Export Guide','如何提交和追踪结果导出审批申请'],['API 接口文档','API Documentation','程序化访问平台数据（即将上线）']].map(d=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:500">${d[0]}</div><div style="font-size:12px;color:var(--text-3)">${d[1]} · ${d[2]}</div></div><button class="btn btn-g btn-xs" onclick="alert('文档即将上线，请联系 support@nbccloud.org.cn 获取')">查看 →</button></div>`).join('')}
+  </div>
+  <div class="card" id="s-faq">
+    <div class="sec-title">常见问题 FAQ</div>
+    ${[['如何申请数据访问权限？','注册账户并完成培训后，在"我的项目"创建研究项目并提交 DAR。DAC 将按 Tier 级别审核：Tier 1 约 3-5 个工作日，Tier 2 约 5-10 个工作日，Tier 3 约 10-15 个工作日。'],['Tier 1/2/3 有什么区别？','Tier 1 为基础脱敏数据，审核最快；Tier 2 为样本级数据（含 GTOP 组学数据）；Tier 3 为高维原始数据（含全基因组序列、影像数据），须重点审查，安全环境额外收费。'],['BWA-MEM2 比对需要多长时间？','取决于数据量和配置。以 50GB FASTQ（WGS 30× 测序深度）为例，使用 8 vCPU / 32 GB 配置约需 4-6 小时，消耗约 32-48 核时。'],['分析结果如何导出？','结果导出须在工作空间提交导出申请，DAC 审批（通常 2-3 个工作日）后可下载。Tier 3 数据产生的结果有额外限制，BAM 文件通常不允许导出。'],['工作空间存储配额是多少？','个人数据存储 100 GB，分析结果缓存 500 GB，月度计算配额 1,000 核时。超出配额按用量计算，可申请扩容。'],['是否支持安装额外的 Python/R 包？','Jupyter 环境支持用户安装额外包（pip install / install.packages），但需 root 权限的安装须联系技术支持。Docker 镜像也可自定义。'],['数据可以下载到本地吗？','不可以。NBC Cloud 所有数据仅限在云端工作空间内使用，不支持原始数据下载。这是数据访问协议的基本约束，确保参与者数据安全。']].map(d=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:13px;font-weight:500;margin-bottom:3px">${d[0]}</div><div style="font-size:12px;color:var(--text-2);line-height:1.75">${d[1]}</div></div>`).join('')}
+  </div>
+  <div class="card" id="s-pub">
+    <div class="sec-title">发表论文</div>
+    ${[{t:'GTOP: A comprehensive multi-omics resource for genotype–phenotype studies',j:'Nature Methods · 2025',doi:'doi:10.1038/nmeth.2025.xxx'},{t:'NBC Cloud: A cloud-based platform for large-scale biomedical data analysis in China',j:'Bioinformatics · 2026',doi:'doi:10.1093/bioinformatics/xxx'},{t:'CryoSeek: A spatial transcriptomics atlas of frozen tissue sections',j:'Cell · 2026',doi:'doi:10.1016/j.cell.2026.xxx'}].map(p=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:13px;font-weight:500;margin-bottom:3px;color:var(--blue);cursor:pointer">${p.t}</div><div style="font-size:12px;color:var(--text-2)">${p.j}</div><div style="font-size:11px;color:var(--text-3);margin-top:2px">${p.doi}</div></div>`).join('')}
+    <div style="padding-top:.75rem;font-size:12px;color:var(--text-2)">发表了使用 NBC Cloud 数据的论文？请发送至 <a href="mailto:publications@nbccloud.org.cn" style="color:var(--blue)">publications@nbccloud.org.cn</a> 以便收录。</div>
+  </div>
+  <div class="card" id="s-ct">
+    <div class="sec-title">联系我们</div>
+    <div class="g2"><div style="display:flex;flex-direction:column;gap:8px">
+      ${[['技术支持','support@nbccloud.org.cn'],['数据访问申请','dac@nbccloud.org.cn'],['数据递交','submit@nbccloud.org.cn'],['合作与共享','collaborate@nbccloud.org.cn'],['媒体与公关','media@smartnbc.org.cn']].map(c=>`<div style="padding:.75rem;background:var(--bg);border-radius:var(--rs)"><div style="font-size:11px;color:var(--text-3);margin-bottom:2px">${c[0]}</div><div style="font-size:13px;color:var(--blue)">${c[1]}</div></div>`).join('')}
+    </div>
+    <div style="padding:.75rem;background:var(--bg);border-radius:var(--rs)"><div style="font-size:11px;color:var(--text-3);margin-bottom:4px">地址</div><div style="font-size:13px;color:var(--text-2);line-height:1.7">深圳市盐田区北山工业区 11 栋<br>国家基因库 NBC Cloud 平台<br>518083 Shenzhen, Guangdong, China</div></div>
+    </div>
+  </div>
+</div></div>${renderFooter()}`}
+
+/* ═══════════════ ABOUT ═══════════════ */
+function rAbout(){return`<div class="page-doc">
+<div class="doc-toc"><h4>关于</h4>
+  <a class="active">NBC Cloud 简介</a>
+  <a onclick="document.getElementById('s-smart').scrollIntoView({behavior:'smooth'})">关于 SMART-NBC</a>
+  <a onclick="document.getElementById('s-partner').scrollIntoView({behavior:'smooth'})">合作机构</a>
+  <a onclick="document.getElementById('s-policy').scrollIntoView({behavior:'smooth'})">数据访问政策</a>
+</div>
+<div class="doc-content card" style="padding:2rem">
+  <h2 style="margin-top:0;padding-top:0;border-top:none">关于 NBC Cloud</h2>
+  <p>NBC Cloud is a cloud-based research analysis platform designed to support the integrative analysis of genomic, multi-omics, and clinical phenotype data from SMART-National Biobank of China (SMART-NBC). The platform provides authorized access to curated biomedical data resources, standardized analytical workflows, and a secure cloud computing environment for large-scale biomedical research.</p>
+  <p>NBC Cloud 采用与 UK Biobank Research Analysis Platform (UKB-RAP) 类似的架构设计：数据不可下载，所有分析在受控云端环境中完成，结果导出须经数据访问委员会（DAC）审批，确保参与者数据隐私和数据安全。</p>
+  <div class="doc-note">NBC Cloud 参考 UK Biobank（UKB）的 Tier 1/2/3 分级访问模式，建立"科学价值 + 伦理合规 + 数据最小必要性"三维审核机制，以及"事前准入 → 事中监控 → 事后追踪"的全生命周期监督体系。</div>
+  <h2 id="s-smart">关于 SMART-NBC</h2>
+  <p>SMART-National Biobank of China（国家生物样本库，SMART-NBC）以健康医疗数据为核心，以高质量样本库为特色，构建人类疾病的多模态、跨尺度数据资源体系，打造安全存储、开放共享、智能应用平台，推动我国及全球生命科学研究与生物医药产业创新发展。</p>
+  <h2 id="s-partner">合作机构</h2>
+  <div class="g3">
+    ${[['SMART-NBC','国家生物样本库','数据来源机构'],['国家基因库 CNGB','深圳国家基因库','基础设施与平台运营'],['华为云','Huawei Cloud','云计算与 RAP 环境支撑'],['深圳医学科学院','SMART','医学研究合作'],['华南理工大学','SCUT','生信方法研究'],['北京大学','PKU','基因组学合作']].map(p=>`<div style="padding:1rem;background:var(--bg);border-radius:var(--rs);text-align:center"><div style="font-size:14px;font-weight:600">${p[0]}</div><div style="font-size:12px;color:var(--text-3);margin-top:2px">${p[1]}</div><div style="font-size:11px;color:var(--blue);margin-top:4px">${p[2]}</div></div>`).join('')}
+  </div>
+  <h2 id="s-policy">数据访问政策摘要</h2>
+  <ul>
+    <li>所有数据访问须通过研究项目申请（DAR），经数据访问委员会（DAC）审批</li>
+    <li>数据访问授权期限为项目周期（初始 36 个月），到期前须提交续期申请</li>
+    <li>数据不可在平台外使用或再分发，违规将导致访问权限立即终止</li>
+    <li>获批研究者须每年提交项目进展报告，发表相关论文须提前备案</li>
+    <li>结果导出须提交申请，DAC 将审查结果是否存在隐私披露风险</li>
+    <li>平台保留对所有数据访问、操作日志进行全量审计的权利</li>
+  </ul>
+</div></div>${renderFooter()}`}
+
+/* ═══════════════ MY PROJECTS ═══════════════ */
+function rProjects(){return`<div class="page">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+  <div class="ph" style="margin:0"><h1>我的项目</h1><p>每个项目对应一个独立工作空间，按 Tier 分级授权数据访问</p></div>
+  <div style="display:flex;gap:8px"><button class="btn btn-g btn-sm" onclick="goto('billing')">计费中心</button><button class="btn btn-p btn-sm" onclick="showM('m-new-proj')">+ 新建项目</button></div>
+</div>
+<div class="g3">
+  ${projects.map(p=>`<div class="card" style="cursor:pointer;transition:border-color .15s,box-shadow .15s" onmouseover="this.style.borderColor='var(--blue)';this.style.boxShadow='0 2px 12px rgba(21,88,160,.1)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow=''" onclick="curProj='${p.id}';goto('my-workspace')">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div style="font-size:14px;font-weight:600;flex:1;margin-right:8px">${p.name}</div><div style="display:flex;gap:4px;flex-shrink:0">${tBadge(p.tier)}${sBadge(p.status)}</div></div>
+    <div style="font-size:12px;color:var(--text-3);margin-bottom:.5rem">${p.id} · ${p.inst} · ${p.created}</div>
+    <p style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:.75rem">${p.desc}</p>
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:.75rem">${p.tags.map(t=>`<span style="font-size:11px;padding:2px 7px;border-radius:4px;background:var(--bg);color:var(--text-2);border:1px solid var(--border)">${t}</span>`).join('')}</div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);border-top:1px solid var(--border);padding-top:.75rem">
+      <span>PI: ${p.pi}</span><span>数据集: ${p.datasets.join('、')}</span>
+    </div>
+  </div>`).join('')}
+</div></div>`}
+
+/* ═══════════════ MY WORKSPACE ═══════════════ */
+function rWorkspace(){
+  var p=projects.find(x=>x.id===curProj)||projects[0];curProj=p.id;
+  return`<div class="page">
+  <div class="bc"><span onclick="goto('my-projects')">我的项目</span> / ${p.name}</div>
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:1rem">
+    <div><h2 style="font-size:16px;font-weight:600;margin-bottom:4px">${p.name}</h2><div style="display:flex;align-items:center;gap:8px">${tBadge(p.tier)}${sBadge(p.status)}<span style="font-size:12px;color:var(--text-3)">${p.id} · WS-${p.id.replace('PRJ-','')} · ${p.inst}</span></div></div>
+    <div style="display:flex;gap:8px;flex-shrink:0"><button class="btn btn-g btn-sm" onclick="goto('billing')">计费</button><button class="btn btn-o btn-sm" onclick="goto('my-tasks')">任务 →</button><button class="btn btn-p btn-sm" onclick="showM('m-new-task')">▶ 新建分析</button></div>
+  </div>
+  <div class="g2" style="margin-bottom:1rem">
+    <div class="card"><div class="sec-title">存储用量</div>
+      <div style="margin-bottom:.75rem"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:3px"><span>个人数据</span><span style="color:var(--blue);font-weight:500">62 / 100 GB</span></div><div class="sbar"><div class="sfill" style="width:62%"></div></div></div>
+      <div><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-2);margin-bottom:3px"><span>分析结果缓存</span><span style="color:var(--green);font-weight:500">170 / 500 GB</span></div><div class="sbar"><div class="sfill sfill-g" style="width:34%"></div></div></div>
+    </div>
+    <div class="card"><div class="sec-title">工作空间概览</div>
+      <div class="stat-kv"><span class="k">工作空间 ID</span><span class="v" style="font-family:monospace;font-size:12px">WS-${p.id.replace('PRJ-','')}</span></div>
+      <div class="stat-kv"><span class="k">月度计算配额</span><span class="v">1,000 核时</span></div>
+      <div class="stat-kv"><span class="k">本月已用</span><span class="v">142 核时</span></div>
+      <div class="stat-kv"><span class="k">并发会话</span><span class="v">2 / 3</span></div>
+      <div class="stat-kv"><span class="k">数据 Tier</span><span class="v">${tBadge(p.tier)}</span></div>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:1rem">
+    <div class="card"><div class="sec-title">已授权数据集</div>
+      ${p.datasets.map((ds,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px"><div><div style="font-weight:500">${ds}</div><div style="font-size:11px;color:var(--text-3)">${i===0?'1,586 样本 · 基因组 + 转录组 + 蛋白质组':'临床表型 · 7,803 变量'}</div></div><span style="font-size:11px;color:var(--text-3)">到期 2026-12-31</span></div>`).join('')}
+      <button class="btn btn-g btn-xs" style="margin-top:.75rem" onclick="goto('access')">申请更多数据集 +</button>
+    </div>
+    <div class="card"><div class="sec-title">活跃会话</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><div style="display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#16a34a;animation:pulse 1.4s infinite;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500">BWA_analysis.ipynb</div><div style="font-size:11px;color:var(--text-3)">Jupyter Lab · 1h 42min · 8 vCPU / 32 GB</div></div></div><div style="display:flex;gap:6px"><button class="btn btn-p btn-xs" onclick="alert('正在进入 Jupyter Lab 会话…\n\n会话 ID: sess_bwa_20260518\n状态: 运行中\n已用: 1h 42min')">进入</button><button class="btn btn-g btn-xs" onclick="if(confirm('确认停止此会话？'))alert('会话已停止。')">停止</button></div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0"><div style="display:flex;align-items:center;gap:10px"><div style="width:8px;height:8px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500">pQTL_pipeline</div><div style="font-size:11px;color:var(--text-3)">标准化流程 · 排队中 · 等待 18min</div></div></div><button class="btn btn-g btn-xs" onclick="if(confirm('取消此任务？'))alert('任务已取消。')">取消</button></div>
+    </div>
+  </div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem"><div class="sec-title" style="margin:0">最近任务</div><button class="btn btn-g btn-xs" onclick="goto('my-tasks')">查看全部 →</button></div>
+    ${tasks.filter(t=>t.proj===p.id).slice(0,3).map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)"><div><div style="font-size:13px;font-weight:500">${t.name}</div><div style="font-size:11px;color:var(--text-3)">${t.id} · ${t.workflow} · ${t.cpu} / ${t.mem}</div></div><div style="display:flex;align-items:center;gap:10px">${sBadge(t.status)}<span style="font-size:12px;color:var(--text-3)">${t.duration}</span>${t.hasResult?`<button class="btn btn-o btn-xs" onclick="viewResult('${t.id}')">查看结果</button>`:''}</div></div>`).join('')}
+    <div style="padding-top:.75rem"><button class="btn btn-p btn-sm" onclick="showM('m-new-task')">+ 新建分析任务</button></div>
+  </div></div>`}
+
+/* ═══════════════ MY TASKS ═══════════════ */
+function rTasks(){
+  var p=projects.find(x=>x.id===curProj)||projects[0];
+  var all=tasks.filter(t=>t.proj===p.id);
+  var filtered=taskFilter==='all'?all:all.filter(t=>t.status===taskFilter);
+  var listV=taskView==='list';
+  return`<div class="page">
+  <div class="bc"><span onclick="goto('my-projects')">我的项目</span> / <span onclick="goto('my-workspace')">${p.name}</span> / 我的任务</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <div><h1 style="font-size:18px;font-weight:600">我的任务</h1><div style="font-size:12px;color:var(--text-3)">WS-${p.id.replace('PRJ-','')} · ${tBadge(p.tier)}</div></div>
+    <button class="btn btn-p btn-sm" onclick="showM('m-new-task')">+ 新建分析任务</button>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <div class="fps">${['all','running','done','failed','queued'].map(f=>`<div class="fp${taskFilter===f?' active':''}" onclick="taskFilter='${f}';goto('my-tasks')">${{all:'全部',running:'运行中',done:'已完成',failed:'失败',queued:'排队中'}[f]}${f==='all'?` (${all.length})`:''}</div>`).join('')}</div>
+    <div style="display:flex;align-items:center;gap:8px"><span style="font-size:12px;color:var(--text-3)">${filtered.length} 个</span>
+      <div class="vtog">
+        <div class="vb${listV?' active':''}" onclick="taskView='list';goto('my-tasks')" title="列表视图"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg></div>
+        <div class="vb${!listV?' active':''}" onclick="taskView='card';goto('my-tasks')" title="卡片视图"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3v8h8V3H3zm6 6H5V5h4v4zm-6 4v8h8v-8H3zm6 6H5v-4h4v4zm4-16v8h8V3h-8zm6 6h-4V5h4v4zm-6 4v8h8v-8h-8zm6 6h-4v-4h4v4z"/></svg></div>
+      </div>
+    </div>
+  </div>
+  ${filtered.length===0?'<div class="tw"><div style="text-align:center;padding:3rem;color:var(--text-3)">暂无符合条件的任务</div></div>':listV?`
+  <div class="tw"><div class="thd"><span>任务名称</span><span>工作流</span><span>状态</span><span>提交时间</span><span>时长/核时</span><span>操作</span></div>
+  ${filtered.map(t=>`<div class="trow"><div><div class="tn">${t.name}</div><div class="tsub">${t.id} · ${t.cpu}/${t.mem} · ${tBadge(t.tier)}</div></div><div style="font-size:12px;color:var(--text-2)">${t.workflow}</div><div>${sBadge(t.status)}</div><div style="font-size:12px;color:var(--text-2)">${t.submitted}</div><div style="font-size:12px;color:var(--text-2)">${t.duration}${t.coreH>0?` · ${t.coreH} 核时`:''}</div><div>${t.status==='done'?`<a class="al" onclick="viewResult('${t.id}')">查看结果</a><a class="al" onclick="reqExportTask('${t.id}')">申请导出</a>`:''}${t.status==='running'||t.status==='queued'?`<a class="al" onclick="viewLog('${t.id}')">日志</a><a class="al danger" onclick="if(confirm('确认停止？'))alert('任务已停止。')">停止</a>`:''}${t.status==='failed'?`<a class="al" onclick="viewLog('${t.id}')">日志</a><a class="al" onclick="resubmit('${t.id}')">重新提交</a>`:''}</div></div>`).join('')}
+  </div>`:
+  `<div class="tcards">${filtered.map(t=>`<div class="tcard"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:13px;font-weight:600">${t.name}</div>${sBadge(t.status)}</div><div style="font-size:11px;color:var(--text-3);margin-bottom:8px">${t.id} · ${t.submitted}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"><span style="font-size:11px;background:var(--bg);border:1px solid var(--border);padding:2px 7px;border-radius:4px">${t.workflow}</span><span style="font-size:11px;background:var(--bg);border:1px solid var(--border);padding:2px 7px;border-radius:4px">${t.cpu}</span><span style="font-size:11px;background:var(--bg);border:1px solid var(--border);padding:2px 7px;border-radius:4px">${t.mem}</span>${tBadge(t.tier)}</div><div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:8px"><span style="font-size:12px;color:var(--text-3)">${t.duration}${t.coreH>0?` · ${t.coreH}核时`:''}</span><div>${t.status==='done'?`<a class="al" onclick="viewResult('${t.id}')">结果</a><a class="al" onclick="reqExportTask('${t.id}')">导出</a>`:''}${t.status==='running'||t.status==='queued'?`<a class="al" onclick="viewLog('${t.id}')">日志</a><a class="al danger" onclick="if(confirm('停止？'))alert('已停止')">停止</a>`:''}${t.status==='failed'?`<a class="al" onclick="viewLog('${t.id}')">日志</a><a class="al" onclick="resubmit('${t.id}')">重提</a>`:''}</div></div></div>`).join('')}</div>`}
+  <div style="margin-top:1rem;font-size:12px;color:var(--text-3)">Tier 2/3 数据结果导出须提交申请并经 DAC 审批（约 2-3 个工作日）。</div>
+</div>`}
+
+/* ═══════════════ BILLING ═══════════════ */
+function rBilling(){return`<div class="page">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem"><div class="ph" style="margin:0"><h1>计费中心</h1><p>计算用量、存储用量及 Tier 分级计费说明</p></div><button class="btn btn-g btn-sm" onclick="goto('my-projects')">← 返回项目</button></div>
+<div class="card" style="margin-bottom:1.25rem">
+  <div class="sec-title">Tier 分级计费说明</div>
+  <div class="tier-cards">
+    <div class="tc tc1"><h4 style="color:var(--t1)">Tier 1 基础访问</h4><div class="tc-data">基础元数据 · 脱敏数据 · 统计汇总</div><div class="tc-cost" style="color:var(--t1)">计算：免费（1,000 核时/月配额内）</div><div class="tc-meta" style="margin-top:4px">存储：前 100GB 免费，超出 ¥0.2/GB/月<br>导出：汇总数据无需额外审批</div></div>
+    <div class="tc tc2"><h4 style="color:var(--t2)">Tier 2 增强访问</h4><div class="tc-data">样本级数据 · 检测结果 · GTOP 数据集</div><div class="tc-cost" style="color:var(--t2)">计算：配额内免费，超出 ¥0.8/核时</div><div class="tc-meta" style="margin-top:4px">存储：前 500GB 免费，超出 ¥0.3/GB/月<br>导出：须 DAC 审批，审核周期 2-3 工作日</div></div>
+    <div class="tc tc3"><h4 style="color:var(--t3)">Tier 3 受限访问</h4><div class="tc-data">WGS/WES 原始数据 · 影像数据</div><div class="tc-cost" style="color:var(--t3)">计算：安全沙箱环境 ¥2/核时起</div><div class="tc-meta" style="margin-top:4px">存储：¥0.5/GB/月<br>导出：原始数据原则上不可导出</div></div>
+  </div>
+</div>
+<div class="g4" style="margin-bottom:1.25rem">
+  <div class="b-stat"><div class="big">142</div><div class="lbl">本月计算（核时）</div><div style="font-size:12px;color:var(--green);margin-top:5px">配额剩余 858 核时</div></div>
+  <div class="b-stat"><div class="big">232</div><div class="lbl">存储用量（GB）</div><div style="font-size:12px;color:var(--text-2);margin-top:5px">个人 62 + 结果 170</div></div>
+  <div class="b-stat"><div class="big">8</div><div class="lbl">本月提交任务</div><div style="font-size:12px;color:var(--text-2);margin-top:5px">5 完成 · 1 运行 · 2 失败</div></div>
+  <div class="b-stat"><div class="big">¥0</div><div class="lbl">本月费用</div><div style="font-size:12px;color:var(--green);margin-top:5px">学术配额内免费</div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="sec-title">计算用量（本月，核时）</div>
+    ${[['BWA-MEM2 Mapping (Tier 2)',43,43],['SMR & HEIDI (Tier 2)',39,39],['pQTL Analysis (Tier 2)',30,30],['GWAS QC (Tier 1)',20,20],['RNA-seq Pipeline (Tier 2)',10,10]].map(r=>`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="width:180px;flex-shrink:0">${r[0]}</span><div style="flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="height:100%;background:var(--blue);border-radius:3px;width:${r[2]*100/142}%"></div></div><span style="width:28px;text-align:right">${r[1]}</span></div>`).join('')}
+  </div>
+  <div class="card"><div class="sec-title">配额与限制</div>
+    <div class="stat-kv"><span class="k">月度计算配额</span><span class="v">1,000 核时</span></div>
+    <div class="stat-kv"><span class="k">个人存储配额</span><span class="v">100 GB（免费）</span></div>
+    <div class="stat-kv"><span class="k">结果缓存配额</span><span class="v">500 GB（免费）</span></div>
+    <div class="stat-kv"><span class="k">最大并发会话</span><span class="v">3 个</span></div>
+    <div class="stat-kv"><span class="k">单任务时长上限</span><span class="v">72 小时</span></div>
+    <div class="stat-kv"><span class="k">账户类型</span><span class="v">学术研究账户（免费）</span></div>
+    <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)"><button class="btn btn-o btn-sm" onclick="alert('扩容申请已发送至 billing@nbccloud.org.cn，我们将在 1 个工作日内回复。')">申请扩容配额</button></div>
+  </div>
+</div></div>`}
+
+/* ═══════════════ PROFILE ═══════════════ */
+function rProfile(){return`<div class="page">
+<div class="prof-hd"><div class="prof-av">罗</div><div><h2 style="font-size:18px;font-weight:600">罗 / Luo</h2><p style="font-size:13px;color:var(--text-2);margin-top:2px">luo@smartnbc.cn · 深圳医学科学院 · 生物信息工程师</p><div style="display:flex;gap:6px;margin-top:8px">${sBadge('approved')}<span style="font-size:12px;color:var(--text-3)">机构认证通过 · 2026-01-15</span></div></div><button class="btn btn-g btn-sm" style="margin-left:auto;align-self:flex-start" onclick="alert('资料编辑功能即将上线。')">编辑资料</button></div>
+<div class="g2">
+  <div class="card"><div class="sec-title">个人信息</div>
+    <div class="stat-kv"><span class="k">用户名</span><span class="v">luo_smartnbc</span></div>
+    <div class="stat-kv"><span class="k">邮箱</span><span class="v">luo@smartnbc.cn</span></div>
+    <div class="stat-kv"><span class="k">所属机构</span><span class="v">深圳医学科学院</span></div>
+    <div class="stat-kv"><span class="k">职位</span><span class="v">生物信息工程师</span></div>
+    <div class="stat-kv"><span class="k">ORCID</span><span class="v" style="color:var(--blue)">0000-0002-xxxx-xxxx</span></div>
+    <div class="stat-kv"><span class="k">注册时间</span><span class="v">2025-11-20</span></div>
+  </div>
+  <div class="card"><div class="sec-title">培训认证</div>
+    <p style="font-size:12px;color:var(--text-2);margin-bottom:.75rem">申请 Tier 2+ 须完成前三项培训</p>
+    ${[['数据保密与隐私保护培训','已完成 · 2025-11-18 · 85/100','approved'],['NBC Cloud 平台使用介绍','已完成 · 2025-11-19 · 92/100','approved'],['研究伦理与合规培训','已完成 · 2025-12-01 · 78/100','approved'],['数据安全规范（高级，Tier 3 要求）','未完成','pending']].map((t,i)=>`<div class="training-item"><div><div style="font-size:13px;font-weight:500">${t[0]}</div><div style="font-size:11px;color:${t[2]==='approved'?'var(--green)':'var(--text-3)'};margin-top:2px">${t[1]}</div></div><div style="display:flex;align-items:center;gap:6px">${sBadge(t[2]==='approved'?'approved':'pending')}${t[2]==='pending'?`<button class="btn btn-o btn-xs" onclick="completeCourse(${i})">开始学习</button>`:''}</div></div>`).join('')}
+  </div>
+</div></div>`}
+
+/* ═══════════════ BWA RESULT ═══════════════ */
+function rBWAResult(){return`<div class="page">
+<div class="bc"><span onclick="goto('my-tasks')">我的任务</span> / BWA-MEM2 DNA 比对分析 — 结果</div>
+<div class="card" style="background:linear-gradient(135deg,#071829,#1558a0);color:#fff;margin-bottom:1.25rem">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:11px;opacity:.6;margin-bottom:4px">JOB-20260518-003 · BWA-MEM2 Mapping</div><h2 style="font-size:16px;font-weight:600;margin-bottom:4px">BWA-MEM2 DNA 比对分析</h2><div style="font-size:12px;opacity:.8">8 vCPU / 32 GB · 5h 23min · 43 核时 · ${tBadge(2)}</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-o btn-sm" onclick="showM('m-export')">申请导出结果</button><button class="btn btn-g btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)" onclick="alert('正在重新提交相同参数的任务…')">重新运行</button></div></div>
+</div>
+<div class="g4" style="margin-bottom:1.25rem">
+  <div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--blue)">98.72%</div><div style="font-size:12px;color:var(--text-3);margin-top:3px">比对率 Mapping Rate</div><div class="progress-bar" style="margin-top:8px"><div class="pb-fill" style="width:98.72%"></div></div></div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--green)">96.15%</div><div style="font-size:12px;color:var(--text-3);margin-top:3px">唯一比对率 Uniquely Mapped</div><div class="progress-bar" style="margin-top:8px"><div class="pb-fill" style="width:96.15%;background:#16a34a"></div></div></div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--text)">51.3 GB</div><div style="font-size:12px;color:var(--text-3);margin-top:3px">输出 BAM 大小</div><div style="font-size:11px;color:var(--text-3);margin-top:6px">排序已建索引</div></div>
+  <div style="background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:1rem;text-align:center"><div style="font-size:22px;font-weight:700;color:var(--text)">30.1×</div><div style="font-size:12px;color:var(--text-3);margin-top:3px">平均测序深度</div><div style="font-size:11px;color:var(--text-3);margin-top:6px">hg38 覆盖深度</div></div>
+</div>
+<div class="g2">
+  <div class="card"><div class="sec-title">比对统计（samtools flagstat）</div>
+    <div class="code-block" style="font-size:11px">
+      <span style="color:#7dd3fc">678,234,512</span> + 0 in total (QC-passed reads + QC-failed reads)<br>
+      <span style="color:#7dd3fc">678,234,512</span> + 0 primary<br>
+      <span style="color:#7dd3fc">0</span> + 0 secondary<br>
+      <span style="color:#7dd3fc">0</span> + 0 supplementary<br>
+      <span style="color:#7dd3fc">3,241,188</span> + 0 duplicates<br>
+      <span style="color:#7dd3fc">669,877,324</span> + 0 primary mapped (<span style="color:#86efac">98.77%</span> : N/A)<br>
+      <span style="color:#7dd3fc">678,234,512</span> + 0 paired in sequencing<br>
+      <span style="color:#7dd3fc">339,117,256</span> + 0 read1<br>
+      <span style="color:#7dd3fc">339,117,256</span> + 0 read2<br>
+      <span style="color:#7dd3fc">665,542,108</span> + 0 properly paired (<span style="color:#86efac">98.13%</span> : N/A)<br>
+    </div>
+  </div>
+  <div class="card"><div class="sec-title">输出文件</div>
+    ${[['sample.sorted.bam','51.3 GB','排序后 BAM 文件（主要输出）','已生成'],['sample.sorted.bam.bai','4.2 MB','BAM 索引文件','已生成'],['alignment_stats.txt','2.1 KB','samtools flagstat 统计','已生成'],['fastqc_R1_report.html','1.8 MB','Read1 质控报告','已生成'],['fastqc_R2_report.html','1.7 MB','Read2 质控报告','已生成'],['multiqc_report.html','3.5 MB','MultiQC 汇总报告','已生成']].map(f=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><div><div style="font-weight:500;font-family:monospace;font-size:12px">${f[0]}</div><div style="font-size:11px;color:var(--text-3)">${f[1]} · ${f[2]}</div></div><span class="badge b-ok">${f[3]}</span></div>`).join('')}
+    <button class="btn btn-o btn-sm" style="margin-top:.75rem" onclick="showM('m-export')">申请导出结果 →</button>
+  </div>
+</div></div>`}
+
+/* ═══════════════ TASK FUNCTIONS ═══════════════ */
+function viewResult(taskId){
+  if(taskId==='JOB-20260518-003'){goto('result-bwa');return}
+  var t=tasks.find(x=>x.id===taskId);
+  document.getElementById('result-title').textContent=`分析结果 — ${t?t.name:taskId}`;
+  document.getElementById('result-body').innerHTML=`<div class="doc-note">任务 ${taskId} 已完成</div><p style="font-size:13px;color:var(--text-2)">工作流: ${t?t.workflow:'—'}<br>运行时长: ${t?t.duration:'—'}<br>计算资源: ${t?t.cpu+' / '+t.mem:'—'}<br>消耗核时: ${t?t.coreH:0} 核时</p><div style="margin-top:1rem"><div class="sec-title">输出文件</div>${['output.tsv (主要结果)','qc_report.html (质控报告)','log/run.log (运行日志)'].map(f=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;font-family:monospace;display:flex;justify-content:space-between">${f}<span class="badge b-ok">已生成</span></div>`).join('')}</div>`;
+  showM('m-result');
+}
+function reqExportTask(id){closeM('m-result');showM('m-export')}
+function viewLog(id){alert(`任务日志 — ${id}\n\n[2026-05-17 10:05:32] INFO: Workflow initialized\n[2026-05-17 10:05:35] INFO: Loading reference genome hg38\n[2026-05-17 10:05:48] INFO: Input files validated\n[2026-05-17 10:06:01] ERROR: Memory allocation failed — requested 64GB, available 16GB\n[2026-05-17 10:06:01] ERROR: Job terminated\n\n建议：尝试更大内存配置（32GB+）后重新提交。`)}
+function resubmit(id){if(confirm(`确认重新提交任务 ${id}？将使用相同参数创建新任务。`)){showM('m-new-task')}}
+function setWorkflow(wf){setTimeout(()=>{var el=document.getElementById('wf-select');if(el&&wf==='bwa'){el.value='BWA-MEM2 DNA Mapping';el.dispatchEvent(new Event('change'))}},100)}
+function completeCourse(i){alert(`已开始培训课程…\n\n完成培训后，系统将自动更新您的认证状态，并可申请 Tier ${i===3?'3':'2'} 数据访问。`)}
+function saveTaskDraft(){closeM('m-new-task');alert('草稿已保存，可在"我的任务"中继续编辑。')}
+
+/* ═══════════════ TASK FORM ═══════════════ */
+var selectedWF='';
+function renderTaskForm(){
+  document.getElementById('task-form-body').innerHTML=`
+<div class="fg"><label class="fl">任务名称<span class="req">*</span></label><input class="fi" id="tf-name" placeholder="如：BWA-MEM2 比对 — Sample_001"></div>
+<div class="fg"><label class="fl">分析工作流<span class="req">*</span></label>
+<select class="fs" id="wf-select" onchange="onWFChange(this.value)">
+  <option value="">请选择工作流…</option>
+  <optgroup label="★ 精选流程"><option>BWA-MEM2 DNA Mapping</option><option>SMR & HEIDI</option><option>scRNA-seq (Seurat)</option></optgroup>
+  <optgroup label="比对 / Mapping"><option>BWA-MEM2 DNA Mapping</option><option>HISAT2 RNA Mapping</option><option>STAR RNA Alignment</option><option>Minimap2 Long-read</option></optgroup>
+  <optgroup label="xQTL 分析"><option>SMR & HEIDI</option><option>FastxQTL</option><option>pQTL Analysis</option><option>eQTL Mapping</option><option>Fine-mapping (SuSiE)</option></optgroup>
+  <optgroup label="基因组学"><option>GWAS QC Pipeline</option><option>Polygenic Risk Score</option><option>Variant Annotation</option></optgroup>
+  <optgroup label="转录组学"><option>DESeq2 Differential Expression</option><option>scRNA-seq (Seurat)</option><option>Trajectory Analysis</option></optgroup>
+  <optgroup label="自定义"><option>Jupyter Notebook（自定义脚本）</option></optgroup>
+</select></div>
+<div id="wf-params"></div>
+<div class="fg"><label class="fl">计算资源配置<span class="req">*</span></label>
+<div class="res-presets" id="res-presets">
+  <div class="rp sel" onclick="selPreset(this,'std')"><div class="rp-name">标准型</div><div class="rp-spec">4 vCPU · 16 GB</div><div class="rp-cost">学术免费</div></div>
+  <div class="rp" onclick="selPreset(this,'mem')"><div class="rp-name">内存优化</div><div class="rp-spec">8 vCPU · 32 GB</div><div class="rp-cost">学术免费</div></div>
+  <div class="rp" onclick="selPreset(this,'big')"><div class="rp-name">大内存型</div><div class="rp-spec">16 vCPU · 64 GB</div><div class="rp-cost">学术免费</div></div>
+  <div class="rp" onclick="selPreset(this,'gpu')"><div class="rp-name">GPU 加速</div><div class="rp-spec">4 vCPU · 32 GB<br>+ 1× T4 GPU</div><div class="rp-cost">申请后使用</div></div>
+</div>
+<button class="btn btn-g btn-xs" onclick="toggleCustom(this)" style="margin-bottom:6px">自定义规格 ▾</button>
+<div class="custom-res" id="custom-res">
+  <div class="res-row"><label>CPU</label><div class="rbs"><span class="rb" onclick="selRB(this,'cpu')">2</span><span class="rb sel" onclick="selRB(this,'cpu')">4</span><span class="rb" onclick="selRB(this,'cpu')">8</span><span class="rb" onclick="selRB(this,'cpu')">16</span><span class="rb" onclick="selRB(this,'cpu')">32</span><span class="rb" style="color:var(--text-3)">核</span></div></div>
+  <div class="res-row"><label>内存</label><div class="rbs"><span class="rb" onclick="selRB(this,'mem')">8</span><span class="rb sel" onclick="selRB(this,'mem')">16</span><span class="rb" onclick="selRB(this,'mem')">32</span><span class="rb" onclick="selRB(this,'mem')">64</span><span class="rb" onclick="selRB(this,'mem')">128</span><span class="rb" onclick="selRB(this,'mem')">256</span><span class="rb" style="color:var(--text-3)">GB</span></div></div>
+  <div class="res-row"><label>GPU</label><div class="rbs"><span class="rb sel" onclick="selRB(this,'gpu')">无</span><span class="rb" onclick="selRB(this,'gpu')">1× T4</span><span class="rb" onclick="selRB(this,'gpu')">2× T4</span><span class="rb" onclick="selRB(this,'gpu')">1× A100</span></div></div>
+  <div class="res-row"><label>时长上限</label><div class="rbs"><span class="rb" onclick="selRB(this,'hr')">12h</span><span class="rb sel" onclick="selRB(this,'hr')">24h</span><span class="rb" onclick="selRB(this,'hr')">48h</span><span class="rb" onclick="selRB(this,'hr')">72h</span></div></div>
+</div>
+</div>
+<div class="fg"><label class="fl">输入数据集<span class="req">*</span></label>
+<div style="border:1px solid var(--border);border-radius:var(--rs);padding:10px;display:flex;flex-direction:column;gap:6px">
+  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox" checked> GTOP v2.1 — ${tBadge(2)} 基因组+转录组+蛋白质组</label>
+  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> SMART-NBC 表型库 — ${tBadge(1)} 临床表型</label>
+  <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer"><input type="checkbox"> 上传自有数据 <span style="font-size:11px;background:var(--bg);border:1px solid var(--border);padding:2px 7px;border-radius:4px">.fastq.gz / .vcf / .bam</span></label>
+</div></div>
+<div class="fg"><label class="fl">备注</label><textarea class="ft" style="min-height:60px" placeholder="可选，说明本次分析目的…"></textarea></div>`;
+}
+function onWFChange(wf){
+  selectedWF=wf;
+  var params='';
+  if(wf==='BWA-MEM2 DNA Mapping'){
+    params=`<div class="fg" style="background:#f8fafc;border:1px solid var(--border);border-radius:var(--rs);padding:12px;margin-bottom:1rem">
+    <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:.75rem">BWA-MEM2 参数配置</div>
+    <div class="fr">
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">参考基因组</label><select class="fs" style="font-size:12px"><option>GRCh38/hg38（平台内置）</option><option>GRCh37/hg19（平台内置）</option><option>自定义参考基因组</option></select></div>
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">比对线程数（-t）</label><input class="fi" value="8" style="font-size:12px"></div>
+    </div>
+    <div class="fr" style="margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">Read Group ID</label><input class="fi" placeholder="sample_001" style="font-size:12px"></div>
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">样本名称（SM）</label><input class="fi" placeholder="sample_001" style="font-size:12px"></div>
+    </div>
+    <div class="fg" style="margin-top:8px;margin-bottom:0"><label class="fl" style="font-size:11px">测序平台（PL）</label><select class="fs" style="font-size:12px"><option>ILLUMINA</option><option>ONT</option><option>PACBIO</option></select></div>
+    <div style="margin-top:10px;padding:8px;background:#fff;border-radius:var(--rs);font-family:monospace;font-size:11px;color:var(--text-2)">
+      预计用时：约 4-6 小时（50GB FASTQ · 8 vCPU）<br>
+      预计消耗：约 32-48 核时（学术配额内免费）
+    </div>
+    </div>`;
+    // Auto-select recommended config
+    setTimeout(()=>{document.querySelectorAll('.rp').forEach(el=>el.classList.remove('sel'));var els=document.querySelectorAll('.rp');if(els[1])els[1].classList.add('sel')},50);
+  }else if(wf==='SMR & HEIDI'){
+    params=`<div class="fg" style="background:#f8fafc;border:1px solid var(--border);border-radius:var(--rs);padding:12px;margin-bottom:1rem">
+    <div style="font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:.75rem">SMR & HEIDI 参数配置</div>
+    <div class="fr">
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">GWAS Summary P 值阈值</label><input class="fi" value="5e-8" style="font-size:12px"></div>
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">HEIDI P 值阈值</label><input class="fi" value="0.05" style="font-size:12px"></div>
+    </div>
+    <div class="fr" style="margin-top:8px">
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">MAF 过滤</label><input class="fi" value="0.01" style="font-size:12px"></div>
+      <div class="fg" style="margin:0"><label class="fl" style="font-size:11px">LD 窗口大小（kb）</label><input class="fi" value="2000" style="font-size:12px"></div>
+    </div></div>`;
+  }
+  document.getElementById('wf-params').innerHTML=params;
+}
+function selPreset(el,type){document.querySelectorAll('.rp').forEach(e=>e.classList.remove('sel'));el.classList.add('sel')}
+function toggleCustom(btn){var el=document.getElementById('custom-res');el.classList.toggle('show');btn.textContent=el.classList.contains('show')?'收起自定义 ▴':'自定义规格 ▾'}
+function selRB(el,group){el.closest('.rbs').querySelectorAll('.rb').forEach(b=>{if(!b.style.color)b.classList.remove('sel')});el.classList.add('sel')}
+function submitTask(){
+  var name=document.getElementById('tf-name')?.value||'';
+  var wf=document.getElementById('wf-select')?.value||'';
+  if(!name.trim()){alert('请填写任务名称。');return}
+  if(!wf){alert('请选择分析工作流。');return}
+  var p=projects.find(x=>x.id===curProj)||projects[0];
+  var newTask={id:'JOB-'+Date.now().toString().slice(-9),proj:p.id,name:name||wf+' 任务',workflow:wf,status:'queued',submitted:new Date().toLocaleString('zh-CN',{hour12:false}).slice(0,16),duration:'—',cpu:document.querySelector('.rp.sel')?.querySelector('.rp-spec')?.textContent?.split('·')[0]?.trim()||'4 vCPU',mem:document.querySelector('.rp.sel')?.querySelector('.rp-spec')?.textContent?.split('·')[1]?.trim()||'16 GB',tier:p.tier,coreH:0,hasResult:false};
+  tasks.unshift(newTask);
+  closeM('m-new-task');
+  goto('my-tasks');
+  alert(`✓ 任务已提交！\n\n任务 ID: ${newTask.id}\n工作流: ${wf}\n状态: 排队中\n\n预计 2-5 分钟内开始运行。`);
+}
+
+/* ═══════════════ PROJECT FORM ═══════════════ */
+var pS=1,pD={};
+function renderPForm(){
+  var s=pS;
+  document.getElementById('pform-body').innerHTML=[pfStep1,pfStep2,pfStep3,pfStep4][s-1]();
+  ['ps1','ps2','ps3','ps4'].forEach((id,i)=>{var el=document.getElementById(id);if(!el)return;el.className='pstep'+(i+1===s?' active':i+1<s?' done':'')});
+  document.getElementById('pp-btn').style.display=s>1?'inline-flex':'none';
+  document.getElementById('pn-btn').textContent=s===4?'提交申请 ✓':'下一步 →';
+}
+function pfStep1(){return`
+<div style="margin-bottom:1rem;padding:.75rem 1rem;background:var(--blue-lt);border-radius:var(--rs);font-size:12px;color:var(--blue-dk)"><strong>A. Application details</strong> — 研究概述将公开发布至平台网站，请填写可对外公开的内容。 <a style="color:var(--blue);cursor:pointer">Link to online help ↗</a></div>
+<div class="fg"><label class="fl">A1. Project title（项目标题）<span class="req">*</span><span style="font-size:11px;color:var(--text-3);font-weight:400"> (maximum 200 characters)</span></label><input class="fi" id="a1" maxlength="200" placeholder="Genetic determinants of blood pressure in the Chinese population" oninput="cc('a1','a1c',200)" value="${pD.a1||''}"><div class="char-c" id="a1c">${(pD.a1||'').length}/200</div></div>
+<div class="fg"><label class="fl">A2. 研究概述<span class="req">*</span><span style="font-size:11px;color:var(--text-3);font-weight:400"> (maximum 2000 characters，将公开发布)</span></label><div style="font-size:11px;color:var(--amber);background:var(--amber-bg);padding:4px 8px;border-radius:4px;margin-bottom:6px">⚠ 此内容将发布在 NBC Cloud 网站，请填写可公开内容</div><textarea class="ft" id="a2" maxlength="2000" style="min-height:90px" placeholder="Please provide an outline of the research you intend to undertake…" oninput="cc('a2','a2c',2000)">${pD.a2||''}</textarea><div class="char-c" id="a2c">${(pD.a2||'').length}/2000</div></div>
+<div class="fg"><label class="fl">A3. 研究关键词（最多 6 个）</label><div class="kw-grid">${[0,1,2,3,4,5].map(i=>`<input class="fi" id="kw${i}" placeholder="关键词 ${i+1}" style="font-size:13px" value="${(pD.kws||[])[i]||''}">`).join('')}</div></div>
+<div class="fr"><div class="fg"><label class="fl">所属机构<span class="req">*</span></label><input class="fi" id="a-inst" placeholder="如：深圳医学科学院" value="${pD.inst||''}"></div><div class="fg"><label class="fl">PI 姓名<span class="req">*</span></label><input class="fi" id="a-pi" placeholder="项目负责人（学生填写导师）" value="${pD.pi||''}"></div></div>
+<div class="conf-box"><div class="conf-q">A4.1. 确认拟开展健康相关研究？<span class="req">*</span></div><div class="conf-hint">We define health-related research as any research which ultimately aims to improve human health.</div><div class="rr">${['Yes','Not Sure'].map(v=>`<label><input type="radio" name="a41" value="${v}" ${pD.a41===v?'checked':''}> <span>${v}</span></label>`).join('')}</div></div>
+<div class="conf-box"><div class="conf-q">A4.2. 确认拟开展符合公共利益的研究？<span class="req">*</span></div><div class="conf-hint">This includes research likely to provide an evidence base for decisions likely to benefit society.</div><div class="rr">${['Yes','Not Sure'].map(v=>`<label><input type="radio" name="a42" value="${v}" ${pD.a42===v?'checked':''}> <span>${v}</span></label>`).join('')}</div></div>
+<div class="conf-box"><div class="conf-q">A5.1. 研究产出是否可能具有争议性？<span class="req">*</span></div><div class="conf-hint">For example, findings that could be interpreted as racially discriminating or stigmatise certain population sub-groups.</div><div class="rr">${['Yes','No','Not Sure'].map(v=>`<label><input type="radio" name="a51" value="${v}" ${pD.a51===v?'checked':''}> <span>${v}</span></label>`).join('')}</div></div>`}
+function pfStep2(){return`
+<div style="margin-bottom:1rem;padding:.75rem 1rem;background:var(--blue-lt);border-radius:var(--rs);font-size:12px;color:var(--blue-dk)"><strong>B. Selection of data-fields — 数据层级选择</strong><br><span style="margin-top:3px;display:block">B1. Please select a data tier. Information about pricing tiers can be found <a style="color:var(--blue)">here</a>.</span></div>
+<p style="font-size:12px;color:var(--text-2);margin-bottom:1rem;line-height:1.7">NBC Cloud encourages applications from student researchers and offers a reduced access fee. Applications submitted under the "Student" tier should be submitted by the student or their supervisor.</p>
+<div class="radio-card${pD.tier==='1'?' rc-t1':''}" onclick="sTier(this,'1')"><input type="radio" name="tier" value="1" ${pD.tier==='1'?'checked':''} style="margin-top:2px;flex-shrink:0"><div style="flex:1"><div style="display:flex;gap:8px;margin-bottom:4px">${tBadge(1)}<strong style="font-size:13px;color:var(--t1)">基础访问</strong></div><div style="font-size:12px;color:var(--text-2);line-height:1.6">基础元数据 · 低敏脱敏数据 · 统计类汇总数据<br>Questionnaire & physical measurements, health outcome phenotypes, linked health data</div><div style="font-size:12px;color:var(--t1);margin-top:4px;font-weight:500">学术免费 · 常规审批 3-5 工作日 · 可有限导出汇总数据</div></div></div>
+<div class="radio-card${pD.tier==='2'?' rc-t2':''}" onclick="sTier(this,'2')"><input type="radio" name="tier" value="2" ${pD.tier==='2'?'checked':''} style="margin-top:2px;flex-shrink:0"><div style="flex:1"><div style="display:flex;gap:8px;margin-bottom:4px">${tBadge(2)}<strong style="font-size:13px;color:var(--t2)">增强访问</strong></div><div style="font-size:12px;color:var(--text-2);line-height:1.6">样本级详细元数据 · 检测结果 · 细粒度临床观察 · 芯片/分型类数据<br>Biochemical & haematological assays, proteomic data, measured & imputed genotypes</div><div style="font-size:12px;color:var(--t2);margin-top:4px;font-weight:500">加强审批 5-10 工作日 · 平台内分析 · 导出须审批</div></div></div>
+<div class="radio-card${pD.tier==='3'?' rc-t3':''}" onclick="sTier(this,'3')"><input type="radio" name="tier" value="3" ${pD.tier==='3'?'checked':''} style="margin-top:2px;flex-shrink:0"><div style="flex:1"><div style="display:flex;gap:8px;margin-bottom:4px">${tBadge(3)}<strong style="font-size:13px;color:var(--t3)">受限访问</strong></div><div style="font-size:12px;color:var(--text-2);line-height:1.6">高维组学原始数据 · 影像原始及高精度数据 · 高再识别风险数据组合<br>Whole genome/exome sequence data, imaging data, other large-scale assay data</div><div style="font-size:12px;color:var(--t3);margin-top:4px;font-weight:500">重点审查 10-15 工作日 · 安全沙箱 · 原始数据原则上不可导出</div></div></div>`}
+function pfStep3(){return`
+<div style="margin-bottom:1rem;padding:.75rem 1rem;background:var(--blue-lt);border-radius:var(--rs);font-size:12px;color:var(--blue-dk)"><strong>C. Collaborators — 协作者</strong><br><span>添加将使用本项目数据的研究人员。协作者须已完成账户注册和必要培训。</span></div>
+<div style="display:flex;gap:8px;margin-bottom:1rem"><input class="fi" id="collab-email" placeholder="输入协作者邮箱…" style="flex:1"><button class="btn btn-o btn-sm" onclick="addCollab()">添加</button></div>
+<div id="collab-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem"><div class="ctag"><span>luo@smartnbc.cn</span><span style="font-size:10px;background:var(--blue);color:#fff;padding:1px 5px;border-radius:3px;margin-left:4px">申请人</span></div></div>
+<div class="fr"><div class="fg"><label class="fl">伦理委员会批准编号<span style="font-size:11px;color:var(--text-3)">（Tier 2/3 必填）</span></label><input class="fi" id="a-ethics" placeholder="如：EC-2026-001" value="${pD.ethics||''}"></div><div class="fg"><label class="fl">机构签约联系人（Signatory）</label><input class="fi" id="a-sign" placeholder="有权代表机构签署协议的人员" value="${pD.sign||''}"></div></div>`}
+function pfStep4(){return`
+<div style="margin-bottom:1rem;padding:.75rem 1rem;background:var(--blue-lt);border-radius:var(--rs);font-size:12px;color:var(--blue-dk)"><strong>D. 确认提交</strong> — 请核对申请信息，提交后进入 DAC 审核流程。</div>
+<div class="review-sec"><h4>A. 项目信息</h4>
+  <div class="rv-row"><span class="rk">项目标题</span><span>${pD.a1||'—'}</span></div>
+  <div class="rv-row"><span class="rk">研究概述</span><span style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${pD.a2||'—'}</span></div>
+  <div class="rv-row"><span class="rk">关键词</span><span>${(pD.kws||[]).filter(Boolean).join(' · ')||'—'}</span></div>
+  <div class="rv-row"><span class="rk">机构 / PI</span><span>${pD.inst||'—'} / ${pD.pi||'—'}</span></div>
+  <div class="rv-row"><span class="rk">A4.1</span><span>${pD.a41||'—'}</span></div>
+  <div class="rv-row"><span class="rk">A4.2</span><span>${pD.a42||'—'}</span></div>
+  <div class="rv-row"><span class="rk">A5.1</span><span>${pD.a51||'—'}</span></div>
+</div>
+<div class="review-sec"><h4>B. 数据层级</h4>
+  <div class="rv-row"><span class="rk">Tier</span><span>${pD.tier?tBadge(parseInt(pD.tier)):'—'}</span></div>
+</div>
+<div style="margin-top:1rem;border:1.5px solid var(--border);border-radius:var(--rs);padding:12px">
+  <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:13px"><input type="checkbox" id="agree-dua" style="margin-top:2px"><span>我已阅读并同意 <a style="color:var(--blue)">数据使用协议（DUA）</a> 及 <a style="color:var(--blue)">NBC Cloud 数据访问政策</a>，确认申请内容真实准确，并承诺遵守数据使用规范及结果回传要求。</span></label>
+</div>`}
+
+function cc(inputId,cId,max){var el=document.getElementById(inputId),c=document.getElementById(cId);if(!el||!c)return;var n=el.value.length;c.textContent=n+'/'+max;c.className='char-c'+(n>max*.9?' warn':'')+(n>max?' over':'')}
+function sTier(card,t){document.querySelectorAll('.radio-card').forEach(c=>{c.className='radio-card'});card.className='radio-card rc-t'+t;card.querySelector('input').checked=true;pD.tier=t}
+function addCollab(){var e=document.getElementById('collab-email');if(!e.value.trim())return;var div=document.createElement('div');div.className='ctag';div.innerHTML=`${e.value} <span onclick="this.parentElement.remove()" style="cursor:pointer;color:var(--red);font-size:14px;line-height:1;margin-left:4px">✕</span>`;document.getElementById('collab-list').appendChild(div);e.value=''}
+function saveProjStep(s){
+  if(s===1){pD.a1=document.getElementById('a1')?.value||pD.a1||'';pD.a2=document.getElementById('a2')?.value||pD.a2||'';pD.kws=[0,1,2,3,4,5].map(i=>document.getElementById('kw'+i)?.value||'');pD.inst=document.getElementById('a-inst')?.value||pD.inst||'';pD.pi=document.getElementById('a-pi')?.value||pD.pi||'';pD.a41=document.querySelector('input[name=a41]:checked')?.value||pD.a41||'';pD.a42=document.querySelector('input[name=a42]:checked')?.value||pD.a42||'';pD.a51=document.querySelector('input[name=a51]:checked')?.value||pD.a51||''}
+  if(s===2){pD.tier=document.querySelector('input[name=tier]:checked')?.value||pD.tier||''}
+  if(s===3){pD.ethics=document.getElementById('a-ethics')?.value||pD.ethics||'';pD.sign=document.getElementById('a-sign')?.value||pD.sign||''}
+}
+function validateProjStep(s){
+  if(s===1){var a1=document.getElementById('a1')?.value||pD.a1||'',a2=document.getElementById('a2')?.value||pD.a2||'',inst=document.getElementById('a-inst')?.value||pD.inst||'',pi=document.getElementById('a-pi')?.value||pD.pi||'',a41=document.querySelector('input[name=a41]:checked')?.value,a42=document.querySelector('input[name=a42]:checked')?.value,a51=document.querySelector('input[name=a51]:checked')?.value;
+    if(!a1.trim()){alert('Please enter the project title (A1).');return false}
+    if(!a2.trim()){alert('Please provide a research outline (A2).');return false}
+    if(!inst.trim()||!pi.trim()){alert('请填写机构和 PI 信息。');return false}
+    if(!a41){alert('Please confirm A4.1.');return false}
+    if(!a42){alert('Please confirm A4.2.');return false}
+    if(!a51){alert('Please confirm A5.1.');return false}
+  }
+  if(s===2){var tier=document.querySelector('input[name=tier]:checked')?.value||pD.tier;if(!tier){alert('请选择数据层级（Tier）。');return false}}
+  return true;
+}
+function goProjStep(n){if(n===pS)return;if(n>pS&&!validateProjStep(pS))return;saveProjStep(pS);pS=n;renderPForm()}
+function pNext(){if(pS===4){submitProj();return}if(!validateProjStep(pS))return;saveProjStep(pS);pS++;renderPForm()}
+function submitProj(){if(!document.getElementById('agree-dua')?.checked){alert('请阅读并同意数据使用协议（DUA）后再提交。');return}closeM('m-new-proj');pD={};pS=1;var tierMap={'1':'3-5 个工作日（Tier 1）','2':'5-10 个工作日（Tier 2）','3':'10-15 个工作日（Tier 3）'};alert('✓ 项目申请已提交！\n\nDAC 审核周期：'+(tierMap[pD.tier||'2']||'5-10 个工作日')+'\n\n审核结果将发送至您的注册邮箱。获批后系统将自动开通云端工作空间。')}
+
+/* ── INIT ── */
+goto('home');
+</script>
+</body>
+</html>
