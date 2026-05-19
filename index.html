@@ -146,8 +146,14 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:va
 .fp.active{background:var(--blue-lt);color:var(--blue);border-color:var(--blue-md)}
 
 /* PROJECT TABS */
+.project-shell{display:flex;flex-direction:column;gap:1rem}
+.project-banner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.project-banner .title-block{min-width:0}
+.project-banner .title-block h1{margin-bottom:4px}
+.project-banner .cta-group{display:flex;gap:8px;flex-wrap:wrap}
+.project-panel{min-height:420px}
 .ptabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
-.ptab{padding:10px 18px;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--text-2);font-size:13px;cursor:pointer;transition:all .15s}
+.ptab{min-width:96px;min-height:44px;padding:0 18px;border:1px solid var(--border);border-radius:999px;background:#fff;color:var(--text-2);font-size:13px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
 .ptab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
 
 /* VIEW TOGGLE */
@@ -802,22 +808,38 @@ function rAbout(){return`<div class="page-doc">
 </div></div>${renderFooter()}`}
 
 /* ═══════════════ MY PROJECTS ═══════════════ */
+function renderProjectSection(){
+  var p=projects.find(x=>x.id===curProj)||projects[0];
+  if(!p)return '';
+  var dsInfo={
+    'GTOP v2.1':{type:'多组学',samples:'1,586',size:'700 TB',desc:'基因组、转录组、蛋白质组数据'},
+    'SMART-NBC 表型库':{type:'临床表型',samples:'1,586',size:'20 GB',desc:'标准化临床与表型数据'},
+    'CryoSeek':{type:'空间转录组',samples:'248',size:'85 TB',desc:'高分辨率空间转录组与图像数据'}
+  };
+  if(projectSection==='data'){
+    var cards=p.datasets.map(ds=>{var d=dsInfo[ds]||{type:'未知',samples:'—',size:'—',desc:'授权数据集'};return`<div class="card" style="padding:1rem;margin-bottom:1rem"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:.75rem"><div><div style="font-size:15px;font-weight:600;margin-bottom:4px">${ds}</div><div style="font-size:12px;color:var(--text-3)">${d.type} · ${d.samples} 样本 · ${d.size}</div></div><div>${tBadge(p.tier)}</div></div><div style="font-size:12px;color:var(--text-2);line-height:1.7">${d.desc}</div></div>`});
+    return`<div><div class="card" style="margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;gap:1rem"><div><div style="font-size:13px;color:var(--text-3);margin-bottom:4px">授权数据集</div><h2 style="font-size:18px;font-weight:700;margin:0">${p.datasets.length} 个已授权数据集</h2><div style="font-size:12px;color:var(--text-3);margin-top:6px">该项目已获 Tier ${p.tier} 数据访问权限，可在工作空间中直接访问授权数据。</div></div><button class="btn btn-o btn-sm" onclick="goto('access')">申请更多数据集</button></div><div class="g2" style="margin-bottom:1rem"><div class="card"><div class="sec-title">当前授权数据</div>${cards.join('')}</div><div class="card"><div class="sec-title">访问统计</div><div class="stat-kv"><span class="k">项目状态</span><span class="v">${p.status==='approved'?'已批准':'审核中'}</span></div><div class="stat-kv"><span class="k">创建时间</span><span class="v">${p.created}</span></div><div class="stat-kv"><span class="k">主导机构</span><span class="v">${p.inst}</span></div><div class="stat-kv"><span class="k">PI</span><span class="v">${p.pi}</span></div><div class="stat-kv"><span class="k">数据 Tier</span><span class="v">${tBadge(p.tier)}</span></div></div></div></div>`;
+  }
+  var projectTasks=tasks.filter(t=>t.proj===p.id);
+  if(projectSection==='tasks'){
+    return`<div><div class="card" style="margin-bottom:1rem"><div style="display:flex;justify-content:space-between;align-items:center;gap:1rem"><div><div style="font-size:13px;color:var(--text-3);margin-bottom:4px">项目任务</div><h2 style="font-size:18px;font-weight:700;margin:0">${projectTasks.length} 个分析任务</h2></div><button class="btn btn-p btn-sm" onclick="showM('m-new-task')">+ 新建任务</button></div></div><div class="g3" style="margin-bottom:1rem">${[['运行中','running'],['已完成','done'],['失败','failed'],['排队中','queued']].map(([label,status])=>{var count=projectTasks.filter(t=>t.status===status).length;return`<div class="card" style="text-align:center"><div style="font-size:15px;font-weight:700;color:var(--blue)">${count}</div><div style="font-size:12px;color:var(--text-3);margin-top:6px">${label}</div></div>`}).join('')}</div><div class="card"><div class="sec-title">近期任务</div>${projectTasks.map(t=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px"><div><div style="font-weight:600">${t.name}</div><div style="font-size:11px;color:var(--text-3);margin-top:4px">${t.id} · ${t.workflow}</div></div><div style="text-align:right"><div>${sBadge(t.status)}</div><div style="font-size:11px;color:var(--text-3);margin-top:6px">${t.submitted}</div><div style="margin-top:6px"><button class="btn btn-o btn-xs" onclick="viewResult('${t.id}')">查看结果</button></div></div></div>`).join('')}</div></div>`;
+  }
+  return`<div><div class="g2" style="margin-bottom:1rem"><div class="card"><div class="sec-title">项目概览</div><div class="stat-kv"><span class="k">项目名称</span><span class="v">${p.name}</span></div><div class="stat-kv"><span class="k">项目编号</span><span class="v">${p.id}</span></div><div class="stat-kv"><span class="k">机构</span><span class="v">${p.inst}</span></div><div class="stat-kv"><span class="k">PI</span><span class="v">${p.pi}</span></div><div class="stat-kv"><span class="k">当前状态</span><span class="v">${p.status==='approved'?'已批准':'审核中'}</span></div><div class="stat-kv"><span class="k">数据 Tier</span><span class="v">${tBadge(p.tier)}</span></div></div><div class="card"><div class="sec-title">访问与结果</div><p style="font-size:12px;color:var(--text-2);line-height:1.75;margin-bottom:.75rem">通过 DAC 审批后，该项目可在 NBC Cloud 云端工作空间内访问已授权数据，结果导出须提交导出申请并经审核。</p><div class="stat-kv"><span class="k">工作空间</span><span class="v">WS-${p.id.replace('PRJ-','')}</span></div><div class="stat-kv"><span class="k">已开放数据</span><span class="v">${p.datasets.join('、')}</span></div><div class="stat-kv"><span class="k">建议操作</span><span class="v">继续运行分析任务 / 提交结果导出申请</span></div></div></div><div class="card"><div class="sec-title">项目详情</div><p style="font-size:13px;color:var(--text-2);line-height:1.8">${p.desc}</p><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:1rem">${p.tags.map(t=>`<span class="fp active" style="border-color:var(--border);background:var(--bg);color:var(--text-2)">${t}</span>`).join('')}</div></div></div>`;
+}
 function rProjects(){return`<div class="page">
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
-  <div class="ph" style="margin:0"><h1>我的项目</h1><p>每个项目对应一个独立工作空间，按 Tier 分级授权数据访问</p></div>
-  <div style="display:flex;gap:8px"><button class="btn btn-g btn-sm" onclick="goto('billing')">计费中心</button><button class="btn btn-p btn-sm" onclick="showM('m-new-proj')">+ 新建项目</button></div>
-</div>
-<div class="g3">
-  ${projects.map(p=>`<div class="card" style="cursor:pointer;transition:border-color .15s,box-shadow .15s" onmouseover="this.style.borderColor='var(--blue)';this.style.boxShadow='0 2px 12px rgba(21,88,160,.1)'" onmouseout="this.style.borderColor='var(--border)';this.style.boxShadow=''" onclick="curProj='${p.id}';goto('my-workspace')">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div style="font-size:14px;font-weight:600;flex:1;margin-right:8px">${p.name}</div><div style="display:flex;gap:4px;flex-shrink:0">${tBadge(p.tier)}${sBadge(p.status)}</div></div>
-    <div style="font-size:12px;color:var(--text-3);margin-bottom:.5rem">${p.id} · ${p.inst} · ${p.created}</div>
-    <p style="font-size:12px;color:var(--text-2);line-height:1.6;margin-bottom:.75rem">${p.desc}</p>
-    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:.75rem">${p.tags.map(t=>`<span style="font-size:11px;padding:2px 7px;border-radius:4px;background:var(--bg);color:var(--text-2);border:1px solid var(--border)">${t}</span>`).join('')}</div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-3);border-top:1px solid var(--border);padding-top:.75rem">
-      <span>PI: ${p.pi}</span><span>数据集: ${p.datasets.join('、')}</span>
-    </div>
-  </div>`).join('')}
-</div></div>`}
+<div class="project-shell">
+  <div class="project-banner">
+    <div class="title-block"><h1>用户管理中心</h1><p>登录后可在此查看项目数据、任务进展与项目详情</p></div>
+    <div class="cta-group"><button class="btn btn-g btn-sm" onclick="goto('billing')">计费中心</button><button class="btn btn-p btn-sm" onclick="showM('m-new-proj')">+ 新建项目</button></div>
+  </div>
+  <div class="ptabs">
+    <div class="ptab${projectSection==='data'?' active':''}" onclick="switchProjectSection('data')">数据</div>
+    <div class="ptab${projectSection==='tasks'?' active':''}" onclick="switchProjectSection('tasks')">任务</div>
+    <div class="ptab${projectSection==='details'?' active':''}" onclick="switchProjectSection('details')">详情</div>
+  </div>
+  <div class="card" style="margin-bottom:1rem;background:var(--blue-lt);border-color:var(--blue-md)"><div style="display:flex;justify-content:space-between;align-items:center;gap:1rem"><div><div style="font-size:12px;color:var(--blue-dk);margin-bottom:5px">当前展示</div><h2 style="font-size:18px;font-weight:700;margin:0">${projectSection==='data'?'授权数据概览':projectSection==='tasks'?'项目任务一览':'项目详情与访问说明'}</h2><div style="font-size:12px;color:var(--text-3);margin-top:6px">${projectSection==='data'?'聚焦已授权数据集与访问权限。':projectSection==='tasks'?'展示当前任务状态与近期任务记录。':'显示项目状态、访问策略与合规摘要。'}</div></div><button class="btn btn-o btn-sm" onclick="projectSection==='tasks'?goto('my-tasks'):goto('my-workspace')">进入工作空间</button></div></div>
+  <div class="project-panel">${renderProjectSection()}</div>
+</div>`;}
 
 /* ═══════════════ MY WORKSPACE ═══════════════ */
 function rWorkspace(){
